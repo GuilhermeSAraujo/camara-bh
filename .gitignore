@@ -1,0 +1,9 @@
+node_modules/
+.idea/
+.eslint-meteor-files
+
+# Cursor / VSCode
+jsconfig.json
+launch.json
+
+/private/env/
