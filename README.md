@@ -1,57 +1,19 @@
-# DX
+# Análise de Dados da Câmara Municipal de Belo Horizonte
 
-> Meteor template by [Quave](https://www.quave.dev)
+## Descrição do Projeto
 
-## What is it?
+Este projeto tem como objetivo coletar dados da "Câmara Municipal de Belo Horizonte" e realizar uma análise detalhada dessas informações. A intenção é disponibilizar os dados de forma mais intuitiva para o público em geral.
 
-DX is a internal project to help tech leads focus on their teams with metrics and insights.
+## Objetivos
 
-## How to run
+- Identificar quais vereadores tiveram mais propostas de lei aceitas.
+- Analisar a presença dos vereadores nas reuniões.
+- Apresentar os dados de maneira acessível e compreensível para a população.
 
-### Steps to Run the Code
+## Como Contribuir
 
-1. Install Node.js (LTS version recommended)
+Se você deseja contribuir para este projeto, fique à vontade para abrir uma issue ou enviar um pull request.
 
-2. Install Meteor by running:
+## Licença
 
-```bash
-curl https://install.meteor.com/ | sh
-```
-
-### Setup steps
-
-1. **Clone the repository and install dependencies**
-
-```bash
-git clone <repository-url>
-cd dx
-meteor npm install
-```
-
-2. **Configure GitHub OAuth**
-
-   - Go to GitHub Developer Settings (https://github.com/settings/developers)
-   - Create a new OAuth App
-   - Copy the Client ID and Client Secret
-
-3. **Set up the settings.json file**
-
-Edit `private/env/dev/settings.json`:
-
-```json
-{
-  "services": {
-    "github": {
-      "loginStyle": "popup",
-      "clientId": "<your-client-id>",
-      "secret": "<your-client-secret>"
-    }
-  }
-}
-```
-
-4. **Run the application**
-
-```bash
-meteor npm run start
-```
+Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
