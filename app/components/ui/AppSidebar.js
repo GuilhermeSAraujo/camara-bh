@@ -190,7 +190,9 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
                           group: group.title,
                           title: item.title,
                           url:
-                            item.title === 'Projetos de Lei' ? 'home' : 'other', // Update URL based on title
+                            item.title === 'Projetos de Lei'
+                              ? 'projetosDeLei'
+                              : 'home', // Update URL based on title
                         })
                       }
                     >
