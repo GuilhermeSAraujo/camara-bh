@@ -7,12 +7,11 @@ const ActionsTypes = {
   ERROR: 'error',
 };
 
-const DefaultValues = {
+const DEFAULT_VALUES = {
   isLoading: false,
   data: undefined,
   error: undefined,
 };
-
 function reducer(state, action) {
   switch (action.type) {
     case ActionsTypes.START:
@@ -25,13 +24,13 @@ function reducer(state, action) {
         ...state,
         isLoading: false,
         error: action.payload,
-        data: DefaultValues.data,
+        data: DEFAULT_VALUES.data,
       };
     case ActionsTypes.SUCCESS:
       return {
         ...state,
         isLoading: false,
-        error: DefaultValues.error,
+        error: DEFAULT_VALUES.error,
         data: action.payload,
       };
     default:
@@ -42,12 +41,12 @@ function reducer(state, action) {
 export function useMethodWithState({
   method,
   params,
-  onError = undefined,
-  onSuccess = undefined,
+  onError,
+  onSuccess,
   dependencyArray = [],
   conditionToRun = true,
 }) {
-  const [state, dispatch] = useReducer(reducer, DefaultValues);
+  const [state, dispatch] = useReducer(reducer, DEFAULT_VALUES);
 
   const call = async () => {
     if (!conditionToRun) return;
