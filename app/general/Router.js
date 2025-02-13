@@ -1,41 +1,23 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import { Layout } from '../components/Layout';
+import { Home } from '../pages/home/Home';
 import { RoutePaths } from './RoutePaths';
-
-import { Dashboard } from '../pages/Dashboard';
-import { NotFound } from '../pages/NotFound';
-import { Login } from '../pages/Login';
-
-import { LoggedLayout } from '../layouts/LoggedLayout';
-import { AuthLayout } from '../layouts/AuthLayout';
-
-import { NoSelectedTeam } from './NoSelectedTeam';
 
 export const router = createBrowserRouter([
   {
-    path: RoutePaths.LOGIN,
-    element: (
-      <AuthLayout>
-        <Login />
-      </AuthLayout>
-    ),
-  },
-  {
-    element: <LoggedLayout />,
+    path: RoutePaths.APP,
+    element: <Layout />,
     children: [
       {
-        path: RoutePaths.APP,
-        element: <NoSelectedTeam />,
+        path: 'home',
+        element: <Home />,
       },
-      {
-        path: RoutePaths.DASHBOARD,
-        element: <Dashboard />,
-      },
+      // {
+      //   path: 'other',
+      //   element: <OtherComponent />,
+      // },
     ],
-  },
-  {
-    path: '*',
-    element: <NotFound />,
   },
 ]);
