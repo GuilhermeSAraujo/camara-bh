@@ -6,7 +6,7 @@ export function ProjetosDeLei() {
   const [data] = useMethodWithState({ method: 'ProjetosDeLei.aprovados' });
 
   return (
-    <div>
+    <div className='md:max-w-7xl" container mx-auto p-4'>
       <div className="self-center">
         <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
           Projetos de Lei aprovados por Vereador
