@@ -3,8 +3,8 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '../components/Layout';
 import { Home } from '../pages/home/Home';
-import { RoutePaths } from './RoutePaths';
 import { ProjetosDeLei } from '../pages/projetosDeLei/ProjetosDeLei';
+import { RoutePaths } from './RoutePaths';
 
 export const router = createBrowserRouter([
   {
@@ -12,11 +12,11 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: 'home',
+        path: RoutePaths.APP,
         element: <Home />,
       },
       {
-        path: 'projetosDeLei',
+        path: RoutePaths.PROJETOS_DE_LEI,
         element: <ProjetosDeLei />,
       },
     ],

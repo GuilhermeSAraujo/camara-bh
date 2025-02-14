@@ -14,6 +14,7 @@ import {
   SidebarRail,
 } from './Sidebar';
 import { useNavigate } from 'react-router-dom';
+import { RoutePaths } from '../../general/RoutePaths';
 
 // This is sample data.
 const data = {
@@ -25,7 +26,7 @@ const data = {
       items: [
         {
           title: 'Projetos de Lei',
-          url: '#',
+          url: RoutePaths.PROJETOS_DE_LEI,
           isActive: true,
         },
         {
@@ -189,10 +190,7 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
                         handleItemClick({
                           group: group.title,
                           title: item.title,
-                          url:
-                            item.title === 'Projetos de Lei'
-                              ? 'projetosDeLei'
-                              : 'home', // Update URL based on title
+                          url: item.url,
                         })
                       }
                     >

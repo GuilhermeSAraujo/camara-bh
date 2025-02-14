@@ -12,7 +12,7 @@ export function ProjetosDeLei() {
           Projetos de Lei aprovados por Vereador
         </h2>
       </div>
-      <div className="mt-8 grid grid-cols-5 gap-4 md:grid-cols-7">
+      <div className="mt-12 grid grid-cols-5 gap-4 md:grid-cols-7">
         {data &&
           data.map((item) => (
             <React.Fragment key={item.author}>
