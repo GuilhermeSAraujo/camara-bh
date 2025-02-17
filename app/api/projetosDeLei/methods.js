@@ -1,13 +1,17 @@
+import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { ProjetosDeLeiCollection, ProjetosDeLeiStatus } from './collection';
 
-async function aprovados() {
+async function aprovados({ startYear, endYear }) {
+  check(startYear, Number);
+  check(endYear, Number);
+
   const projetosDeLei = await ProjetosDeLeiCollection.find(
     {
       $and: [
         { author: { $regex: 'Ver\\.\\(a\\)', $options: 'i' } },
         { author: { $not: /;/ } },
-        { year: { $gte: '2021', $lte: '2024' } },
+        { year: { $gte: startYear.toString(), $lte: endYear.toString() } },
         { status: ProjetosDeLeiStatus.LEI },
       ],
     },
@@ -34,6 +38,22 @@ async function aprovados() {
     .sort((a, b) => b.value - a.value);
 }
 
+async function filterOptions() {
+  const projetosDeLeiCursor = await ProjetosDeLeiCollection.find(
+    {},
+    { fields: { year: 1 } }
+  ).fetchAsync();
+
+  const yearsSet = new Set();
+
+  for await (const projetoDeLei of projetosDeLeiCursor) {
+    yearsSet.add(projetoDeLei.year);
+  }
+
+  return Array.from(yearsSet).sort();
+}
+
 Meteor.methods({
   'ProjetosDeLei.aprovados': aprovados,
+  'ProjetosDeLei.filterOptions': filterOptions,
 });

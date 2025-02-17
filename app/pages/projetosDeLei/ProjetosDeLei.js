@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Progress } from '../../components/ui/Progress';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '../../components/ui/Select';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 
 export function ProjetosDeLei() {
-  const [data] = useMethodWithState({ method: 'ProjetosDeLei.aprovados' });
+  const [startYear, setStartYear] = useState(2019);
+  const [endYear, setEndYear] = useState(2024);
+
+  const [filterOptions] = useMethodWithState({
+    method: 'ProjetosDeLei.filterOptions',
+  });
+  console.log({ filterOptions });
+
+  const [data] = useMethodWithState({
+    method: 'ProjetosDeLei.aprovados',
+    params: { startYear, endYear },
+  });
 
   return (
     <div className='md:max-w-7xl" container mx-auto p-4'>
@@ -12,6 +32,26 @@ export function ProjetosDeLei() {
           Projetos de Lei aprovados por Vereador
         </h2>
       </div>
+
+      <div>
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Selecione o ano de início" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Anos</SelectLabel>
+              {filterOptions &&
+                filterOptions.map((year) => (
+                  <SelectItem key={year} value={year}>
+                    {year}
+                  </SelectItem>
+                ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="mt-12 grid grid-cols-5 gap-4 md:grid-cols-7">
         {data &&
           data.map((item) => (
