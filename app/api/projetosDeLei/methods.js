@@ -34,6 +34,7 @@ async function aprovados({ mandato }) {
   return Object.values(groupedByAuthor)
     .map((item) => ({
       ...item,
+      // removendo prefixo vereador
       author: item.author.replace(/^Ver\.\(a\)/, '').trim(),
     }))
     .sort((a, b) => b.value - a.value);

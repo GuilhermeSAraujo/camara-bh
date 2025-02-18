@@ -5,6 +5,7 @@ import { Layout } from '../components/Layout';
 import { Home } from '../pages/home/Home';
 import { ProjetosDeLei } from '../pages/projetosDeLei/ProjetosDeLei';
 import { RoutePaths } from './RoutePaths';
+import { Vereadores } from '../pages/vereadores/Vereadores';
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
       {
         path: RoutePaths.PROJETOS_DE_LEI,
         element: <ProjetosDeLei />,
+      },
+      {
+        path: RoutePaths.VEREADORES,
+        element: <Vereadores />,
       },
     ],
   },
