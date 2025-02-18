@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Label } from '../../components/ui/Label';
 import { Progress } from '../../components/ui/Progress';
 import {
   Select,
@@ -11,19 +12,22 @@ import {
 } from '../../components/ui/Select';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 
-export function ProjetosDeLei() {
-  const [startYear, setStartYear] = useState(2019);
-  const [endYear, setEndYear] = useState(2024);
+const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 
-  const [filterOptions] = useMethodWithState({
-    method: 'ProjetosDeLei.filterOptions',
-  });
-  console.log({ filterOptions });
+export function ProjetosDeLei() {
+  const [mandato, setMandato] = useState('2021;2024');
 
   const [data] = useMethodWithState({
     method: 'ProjetosDeLei.aprovados',
-    params: { startYear, endYear },
+    params: { mandato },
+    dependencyArray: [mandato],
   });
+
+  function handleChangeMandato(value) {
+    if (value === mandato) return;
+
+    setMandato(value);
+  }
 
   return (
     <div className='md:max-w-7xl" container mx-auto p-4'>
@@ -33,18 +37,19 @@ export function ProjetosDeLei() {
         </h2>
       </div>
 
-      <div>
-        <Select>
+      <div className="mt-10 flex items-center">
+        <Label className="text-md pr-4">Selecione o mandato</Label>
+        <Select value={mandato} onValueChange={handleChangeMandato}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Selecione o ano de início" />
+            <SelectValue placeholder="Selecione o mandato desejado" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Anos</SelectLabel>
+              <SelectLabel>Mandatos</SelectLabel>
               {filterOptions &&
                 filterOptions.map((year) => (
                   <SelectItem key={year} value={year}>
-                    {year}
+                    {year.replace(';', ' - ')}
                   </SelectItem>
                 ))}
             </SelectGroup>
