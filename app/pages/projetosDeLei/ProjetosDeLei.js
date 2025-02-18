@@ -1,3 +1,4 @@
+import { Filter } from 'lucide-react';
 import React, { useState } from 'react';
 import { Label } from '../../components/ui/Label';
 import { Progress } from '../../components/ui/Progress';
@@ -38,7 +39,8 @@ export function ProjetosDeLei() {
       </div>
 
       <div className="mt-10 flex items-center">
-        <Label className="text-md pr-4">Selecione o mandato</Label>
+        <Filter size="20px" />
+        <Label className="text-md px-3">Selecione o mandato</Label>
         <Select value={mandato} onValueChange={handleChangeMandato}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Selecione o mandato desejado" />
