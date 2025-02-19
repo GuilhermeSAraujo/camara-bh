@@ -31,13 +31,31 @@ async function aprovados({ mandato }) {
     return acc;
   }, {});
 
-  return Object.values(groupedByAuthor)
+  const authors = Object.values(groupedByAuthor)
     .map((item) => ({
       ...item,
       // removendo prefixo vereador
       author: item.author.replace(/^Ver\.\(a\)/, '').trim(),
     }))
     .sort((a, b) => b.value - a.value);
+
+  const returnObject = [];
+  for await (const author of authors) {
+    const { author: authorName } = author;
+
+    const vereador = await ProjetosDeLeiCollection.findOneAsync(
+      { name: authorName },
+      { fields: { party: 1 } }
+    );
+
+    if (vereador?.party) {
+      author.party = vereador.party;
+    }
+
+    returnObject.push(author);
+  }
+
+  return authors;
 }
 
 Meteor.methods({
