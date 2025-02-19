@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '../../components/ui/Select';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
+import { PARTY_COLOR } from '../../lib/consts';
 
 const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 
@@ -28,6 +29,13 @@ export function ProjetosDeLei() {
     if (value === mandato) return;
 
     setMandato(value);
+  }
+
+  function getPartyColor(party) {
+    if (party) {
+      return PARTY_COLOR[party];
+    }
+    return '#808080';
   }
 
   return (
@@ -67,6 +75,7 @@ export function ProjetosDeLei() {
                 {item.author}
               </h3>
               <Progress
+                barColor={getPartyColor(item.party)}
                 className="col-span-2 md:col-span-5"
                 value={item.value}
                 max={data[0]?.value}
