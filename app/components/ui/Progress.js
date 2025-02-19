@@ -4,7 +4,7 @@ import * as ProgressPrimitive from '@radix-ui/react-progress';
 import { cn } from '../../lib/utils';
 
 const Progress = React.forwardRef(
-  ({ className, value, max = 100, ...props }, ref) => (
+  ({ className, value, max = 100, barColor = '#808080', ...props }, ref) => (
     <ProgressPrimitive.Root
       ref={ref}
       className={cn(
@@ -14,8 +14,9 @@ const Progress = React.forwardRef(
       {...props}
     >
       <ProgressPrimitive.Indicator
-        className="h-full w-full flex-1 bg-purple-500 transition-all"
+        className="h-full w-full flex-1 transition-all"
         style={{
+          backgroundColor: barColor,
           transform: `translateX(-${100 - ((value || 0) / max) * 100}%)`,
         }}
       />
