@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../../components/ui/Select';
+import { Spinner } from '../../components/ui/Spinner';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { PARTY_COLOR } from '../../lib/consts';
 import { ChartDetailsModal } from './ChartDetailsModal';
@@ -20,7 +21,7 @@ const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 export function ProjetosDeLei() {
   const [mandato, setMandato] = useState('2021;2024');
 
-  const [data] = useMethodWithState({
+  const [data, { isLoading }] = useMethodWithState({
     method: 'ProjetosDeLei.aprovados',
     params: { mandato },
     dependencyArray: [mandato],
@@ -74,23 +75,27 @@ export function ProjetosDeLei() {
         </div>
       </div>
 
-      <div className="mt-10 grid grid-cols-5 gap-4 md:grid-cols-7">
-        {data &&
-          data.map((item) => (
-            <React.Fragment key={item.author}>
-              <h3 className="col-span-2 items-center md:col-span-1">
-                {item.author}
-              </h3>
-              <Progress
-                barColor={getPartyColor(item.party)}
-                className="col-span-2 md:col-span-5"
-                value={item.value}
-                max={data[0]?.value}
-              />
-              <h3 className="col-span-1">{item.value}</h3>
-            </React.Fragment>
-          ))}
-      </div>
+      {isLoading ? (
+        <Spinner className="mt-12" size="large" />
+      ) : (
+        <div className="mt-10 grid grid-cols-5 gap-4 md:grid-cols-7">
+          {data &&
+            data.map((item) => (
+              <React.Fragment key={item.author}>
+                <h3 className="col-span-2 items-center md:col-span-1">
+                  {item.author}
+                </h3>
+                <Progress
+                  barColor={getPartyColor(item.party)}
+                  className="col-span-2 md:col-span-5"
+                  value={item.value}
+                  max={data[0]?.value}
+                />
+                <h3 className="col-span-1">{item.value}</h3>
+              </React.Fragment>
+            ))}
+        </div>
+      )}
     </div>
   );
 }
