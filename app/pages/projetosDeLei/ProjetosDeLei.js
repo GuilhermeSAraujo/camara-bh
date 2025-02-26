@@ -16,10 +16,10 @@ import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { PARTY_COLOR } from '../../lib/consts';
 import { ChartDetailsModal } from './ChartDetailsModal';
 
-const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
+const filterOptions = ['2013;2016', '2017;2020', '2021;2024', '2025;2028'];
 
 export function ProjetosDeLei() {
-  const [mandato, setMandato] = useState('2021;2024');
+  const [mandato, setMandato] = useState('2025;2028');
 
   const [data, { isLoading }] = useMethodWithState({
     method: 'ProjetosDeLei.aprovados',
