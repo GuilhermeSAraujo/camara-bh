@@ -48,7 +48,7 @@ export function ProjetosDeLei() {
         </h2>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-1 md:gap-4">
+      <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-4">
         <div className="flex items-center">
           <Filter size="20px" />
           <Label className="text-md px-3">Selecione o mandato</Label>
