@@ -18,4 +18,5 @@ export const PARTY_COLOR = {
   MOBILIZA: '#6A5ACD',
   PP: '#0000CD',
   PV: '#008000',
+  Indisponivel: '#808080',
 };

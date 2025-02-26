@@ -1,5 +1,6 @@
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
+import { VereadoresCollection } from '../vereadores';
 import { ProjetosDeLeiCollection, ProjetosDeLeiStatus } from './collection';
 
 async function aprovados({ mandato }) {
@@ -42,9 +43,13 @@ async function aprovados({ mandato }) {
   const returnObject = [];
   for await (const author of authors) {
     const { author: authorName } = author;
-
-    const vereador = await ProjetosDeLeiCollection.findOneAsync(
-      { name: authorName },
+    const vereador = await VereadoresCollection.findOneAsync(
+      {
+        $or: [
+          { name: { $regex: authorName, $options: 'i' } },
+          { fullName: { $regex: authorName, $options: 'i' } },
+        ],
+      },
       { fields: { party: 1 } }
     );
 

@@ -13,6 +13,7 @@ import {
 } from '../../components/ui/Select';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { PARTY_COLOR } from '../../lib/consts';
+import { ChartDetailsModal } from './ChartDetailsModal';
 
 const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 
@@ -39,35 +40,41 @@ export function ProjetosDeLei() {
   }
 
   return (
-    <div className='md:max-w-7xl" container mx-auto p-4'>
+    <div className="container mx-auto p-4 md:max-w-7xl">
       <div className="self-center">
         <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
-          Projetos de Lei aprovados por Vereador
+          <span className="underline">Projetos de Lei</span> propostos e
+          aprovados por <span className="underline">Vereador</span>
         </h2>
       </div>
 
-      <div className="mt-10 flex items-center">
-        <Filter size="20px" />
-        <Label className="text-md px-3">Selecione o mandato</Label>
-        <Select value={mandato} onValueChange={handleChangeMandato}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Selecione o mandato desejado" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Mandatos</SelectLabel>
-              {filterOptions &&
-                filterOptions.map((year) => (
-                  <SelectItem key={year} value={year}>
-                    {year.replace(';', ' - ')}
-                  </SelectItem>
-                ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-1 md:gap-4">
+        <div className="flex items-center">
+          <Filter size="20px" />
+          <Label className="text-md px-3">Selecione o mandato</Label>
+          <Select value={mandato} onValueChange={handleChangeMandato}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Selecione o mandato desejado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Mandatos</SelectLabel>
+                {filterOptions &&
+                  filterOptions.map((year) => (
+                    <SelectItem key={year} value={year}>
+                      {year.replace(';', ' - ')}
+                    </SelectItem>
+                  ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex justify-start">
+          <ChartDetailsModal />
+        </div>
       </div>
 
-      <div className="mt-12 grid grid-cols-5 gap-4 md:grid-cols-7">
+      <div className="mt-10 grid grid-cols-5 gap-4 md:grid-cols-7">
         {data &&
           data.map((item) => (
             <React.Fragment key={item.author}>
