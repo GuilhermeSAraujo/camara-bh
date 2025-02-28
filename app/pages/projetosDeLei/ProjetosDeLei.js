@@ -42,6 +42,20 @@ export function ProjetosDeLei() {
     return '#808080';
   }
 
+  function getTotalLaws() {
+    if (!data?.length) return 0;
+
+    return data.reduce((acc, item) => acc + item.value, 0);
+  }
+
+  function getChartTitle() {
+    const total = getTotalLaws();
+    if (onlyApproved) {
+      return `Projetos de Lei Aprovados entre ${mandato.split(';')[0]} - ${mandato.split(';')[1]}: ${total}`;
+    }
+    return `Projetos de Lei Propostos entre ${mandato.split(';')[0]} - ${mandato.split(';')[1]}: ${total}`;
+  }
+
   return (
     <div className="container mx-auto p-4 md:max-w-7xl">
       <div className="self-center">
@@ -92,6 +106,9 @@ export function ProjetosDeLei() {
         <Spinner className="mt-12" size="large" />
       ) : data && data.length > 0 ? (
         <div className="mt-10 grid grid-cols-5 gap-4 md:grid-cols-7">
+          <div className="md:col-span-2" />
+          <div className="font-bold md:col-span-3">{getChartTitle()}</div>
+          <div className="md:col-span-2" />
           {data.map((item) => (
             <React.Fragment key={item.author}>
               <h3 className="col-span-2 items-center md:col-span-1">
