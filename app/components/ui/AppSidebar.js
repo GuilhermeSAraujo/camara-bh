@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { RoutePaths } from '../../general/RoutePaths';
 import { NavBarCaption } from './NavBarCaption';
-import { SearchForm } from './SearchForm';
 import {
   Sidebar,
   SidebarContent,
@@ -13,8 +14,6 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from './Sidebar';
-import { useNavigate } from 'react-router-dom';
-import { RoutePaths } from '../../general/RoutePaths';
 
 // This is sample data.
 const data = {
@@ -27,7 +26,6 @@ const data = {
         {
           title: 'Projetos de Lei',
           url: RoutePaths.PROJETOS_DE_LEI,
-          isActive: true,
         },
       ],
     },
@@ -77,8 +75,7 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <NavBarCaption />
-        <SearchForm />
+        <NavBarCaption handleItemClick={handleItemClick} />
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
@@ -100,7 +97,7 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
                         })
                       }
                     >
-                      <a href={item.url}>{item.title}</a>
+                      <p>{item.title}</p>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
