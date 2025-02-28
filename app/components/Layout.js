@@ -15,7 +15,6 @@ import { Outlet } from 'react-router-dom';
 export function Layout() {
   const [breadcrumb, setBreadcrumb] = useState({
     group: 'Geral',
-    title: 'Projetos de Lei',
   });
 
   return (
@@ -32,10 +31,12 @@ export function Layout() {
                   href="#"
                   onClick={(e) => console.log('olá!', e.target)}
                 >
-                  {breadcrumb.group || 'Building Your Application'}
+                  {breadcrumb?.group || 'Geral'}
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
+              {breadcrumb?.title && (
+                <BreadcrumbSeparator className="hidden md:block" />
+              )}
               <BreadcrumbItem>
                 <BreadcrumbPage>{breadcrumb.title}</BreadcrumbPage>
               </BreadcrumbItem>
