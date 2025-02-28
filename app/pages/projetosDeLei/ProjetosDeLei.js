@@ -72,6 +72,17 @@ export function ProjetosDeLei() {
             </SelectContent>
           </Select>
         </div>
+        <div className="flex items-center">
+          <FileCheck size="20px" />
+          <Label id="onlyApproved" className="text-md px-3">
+            Apenas <span className="font-semibold">Aprovados</span>
+          </Label>
+          <Switch
+            checked={onlyApproved}
+            onCheckedChange={() => setOnlyApproved((v) => !v)}
+            htmlFor="onlyApproved"
+          />
+        </div>
         <div className="flex justify-start">
           <ChartDetailsModal />
         </div>
@@ -79,23 +90,28 @@ export function ProjetosDeLei() {
 
       {isLoading ? (
         <Spinner className="mt-12" size="large" />
-      ) : (
+      ) : data && data.length > 0 ? (
         <div className="mt-10 grid grid-cols-5 gap-4 md:grid-cols-7">
-          {data &&
-            data.map((item) => (
-              <React.Fragment key={item.author}>
-                <h3 className="col-span-2 items-center md:col-span-1">
-                  {item.author}
-                </h3>
-                <Progress
-                  barColor={getPartyColor(item.party)}
-                  className="col-span-2 md:col-span-5"
-                  value={item.value}
-                  max={data[0]?.value}
-                />
-                <h3 className="col-span-1">{item.value}</h3>
-              </React.Fragment>
-            ))}
+          {data.map((item) => (
+            <React.Fragment key={item.author}>
+              <h3 className="col-span-2 items-center md:col-span-1">
+                {item.author}
+              </h3>
+              <Progress
+                barColor={getPartyColor(item.party)}
+                className="col-span-2 md:col-span-5"
+                value={item.value}
+                max={data[0]?.value}
+              />
+              <h3 className="col-span-1">{item.value}</h3>
+            </React.Fragment>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-12 text-center">
+          <h3 className="text-lg">
+            Nenhum projeto foi aprovado até o momento!
+          </h3>
         </div>
       )}
     </div>
