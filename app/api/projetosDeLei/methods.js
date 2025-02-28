@@ -3,8 +3,10 @@ import { Meteor } from 'meteor/meteor';
 import { VereadoresCollection } from '../vereadores';
 import { ProjetosDeLeiCollection, ProjetosDeLeiStatus } from './collection';
 
-async function aprovados({ mandato }) {
+async function aprovados({ mandato, onlyApproved }) {
   check(mandato, String);
+  check(onlyApproved, Boolean);
+
   const startYear = mandato.split(';')[0];
   const endYear = mandato.split(';')[1];
 
@@ -14,7 +16,7 @@ async function aprovados({ mandato }) {
         { author: { $regex: 'Ver\\.\\(a\\)', $options: 'i' } },
         { author: { $not: /;/ } },
         { year: { $gte: startYear, $lte: endYear } },
-        { status: ProjetosDeLeiStatus.LEI },
+        ...(onlyApproved ? [{ status: ProjetosDeLeiStatus.LEI }] : []),
       ],
     },
     { fields: { author: 1 } }

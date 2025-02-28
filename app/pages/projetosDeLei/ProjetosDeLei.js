@@ -1,4 +1,4 @@
-import { Filter } from 'lucide-react';
+import { FileCheck, Filter } from 'lucide-react';
 import React, { useState } from 'react';
 import { Label } from '../../components/ui/Label';
 import { Progress } from '../../components/ui/Progress';
@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '../../components/ui/Select';
 import { Spinner } from '../../components/ui/Spinner';
+import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { PARTY_COLOR } from '../../lib/consts';
 import { ChartDetailsModal } from './ChartDetailsModal';
@@ -20,11 +21,12 @@ const filterOptions = ['2013;2016', '2017;2020', '2021;2024', '2025;2028'];
 
 export function ProjetosDeLei() {
   const [mandato, setMandato] = useState('2025;2028');
+  const [onlyApproved, setOnlyApproved] = useState(true);
 
   const [data, { isLoading }] = useMethodWithState({
     method: 'ProjetosDeLei.aprovados',
-    params: { mandato },
-    dependencyArray: [mandato],
+    params: { mandato, onlyApproved },
+    dependencyArray: [mandato, onlyApproved],
   });
 
   function handleChangeMandato(value) {
@@ -49,7 +51,7 @@ export function ProjetosDeLei() {
         </h2>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-4">
+      <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-6">
         <div className="flex items-center">
           <Filter size="20px" />
           <Label className="text-md px-3">Selecione o mandato</Label>
