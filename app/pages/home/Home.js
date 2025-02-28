@@ -101,7 +101,10 @@ export function Home() {
 
 function CardItem({ title, description, icon, bgColor }) {
   return (
-    <Card className="cursor-pointer" onClick={icon.onClick}>
+    <Card
+      className="cursor-pointer transition-shadow duration-300 hover:shadow-xl"
+      onClick={icon.onClick}
+    >
       <CardHeader>
         <CardTitle>
           <div className="flex place-items-center justify-between">
