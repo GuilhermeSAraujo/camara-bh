@@ -106,9 +106,11 @@ export function ProjetosDeLei() {
         <Spinner className="mt-12" size="large" />
       ) : data && data.length > 0 ? (
         <div className="mt-10 grid grid-cols-5 gap-4 md:grid-cols-7">
-          <div className="md:col-span-2" />
-          <div className="font-bold md:col-span-3">{getChartTitle()}</div>
-          <div className="md:col-span-2" />
+          <div className="hidden md:col-span-2 md:block" />
+          <div className="col-span-5 mt-4 text-center font-bold md:col-span-3 md:mt-0 md:text-left">
+            {getChartTitle()}
+          </div>
+          <div className="hidden md:col-span-2 md:block" />
           {data.map((item) => (
             <React.Fragment key={item.author}>
               <h3 className="col-span-2 items-center md:col-span-1">
