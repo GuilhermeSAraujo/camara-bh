@@ -1,5 +1,6 @@
 import { InfoIcon } from 'lucide-react';
 import React from 'react';
+import { PARTY_COLOR } from '../../lib/consts';
 import {
   Dialog,
   DialogContent,
@@ -7,9 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../../components/ui/Dialog';
-import { Label } from '../../components/ui/Label';
-import { PARTY_COLOR } from '../../lib/consts';
+} from './Dialog';
+import { Label } from './Label';
 
 export function ChartDetailsModal() {
   return (

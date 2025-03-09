@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { PARTY_COLOR } from './consts';
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -19,3 +20,10 @@ export const formatTime = (hours) => {
 
   return parts.length ? parts.join(' ') : '0m';
 };
+
+export function getPartyColor(party) {
+  if (party) {
+    return PARTY_COLOR[party];
+  }
+  return '#808080';
+}

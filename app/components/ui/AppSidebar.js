@@ -20,12 +20,16 @@ const data = {
   versions: ['1.0.1', '1.1.0-alpha', '2.0.0-beta1'],
   navMain: [
     {
-      title: 'Geral',
+      title: 'Projetos de Lei',
       url: '#',
       items: [
         {
-          title: 'Projetos de Lei',
+          title: 'Por Vereadores',
           url: RoutePaths.PROJETOS_DE_LEI,
+        },
+        {
+          title: 'Por Partidos',
+          url: RoutePaths.PROJETOS_DE_LEI_POR_PARTIDOS,
         },
       ],
     },

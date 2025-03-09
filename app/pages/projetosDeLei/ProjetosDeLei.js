@@ -1,5 +1,6 @@
 import { FileCheck, Filter } from 'lucide-react';
 import React, { useState } from 'react';
+import { ChartDetailsModal } from '../../components/ui/ChartDetailsModal';
 import { Label } from '../../components/ui/Label';
 import { Progress } from '../../components/ui/Progress';
 import {
@@ -14,14 +15,13 @@ import {
 import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
-import { PARTY_COLOR } from '../../lib/consts';
-import { ChartDetailsModal } from './ChartDetailsModal';
+import { getPartyColor } from '../../lib/utils';
 
 const filterOptions = ['2013;2016', '2017;2020', '2021;2024', '2025;2028'];
 
 export function ProjetosDeLei() {
   const [mandato, setMandato] = useState('2025;2028');
-  const [onlyApproved, setOnlyApproved] = useState(true);
+  const [onlyApproved, setOnlyApproved] = useState(false);
 
   const [data, { isLoading }] = useMethodWithState({
     method: 'ProjetosDeLei.aprovados',
@@ -33,13 +33,6 @@ export function ProjetosDeLei() {
     if (value === mandato) return;
 
     setMandato(value);
-  }
-
-  function getPartyColor(party) {
-    if (party) {
-      return PARTY_COLOR[party];
-    }
-    return '#808080';
   }
 
   function getTotalLaws() {
@@ -104,7 +97,7 @@ export function ProjetosDeLei() {
 
       {isLoading ? (
         <Spinner className="mt-12" size="large" />
-      ) : data && data.length > 0 ? (
+      ) : data?.length > 0 ? (
         <div className="mt-10 grid grid-cols-5 gap-4 md:grid-cols-7">
           <div className="hidden md:col-span-2 md:block" />
           <div className="col-span-5 mt-4 text-center font-bold md:col-span-3 md:mt-0 md:text-left">
