@@ -16,11 +16,9 @@ export function ProjetosDeLeiPartidos() {
     dependencyArray: [onlyApproved],
   });
 
-  console.log('data', data);
-
   return (
-    <>
-      <div className="container mx-auto p-4 md:max-w-7xl">
+    <div>
+      <div className="container mx-auto max-w-xs p-4 md:max-w-7xl">
         <div className="self-center">
           <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
             <span className="underline">Projetos de Lei</span> propostos e
@@ -60,7 +58,6 @@ export function ProjetosDeLeiPartidos() {
                   'Partido',
                 ]}
               />
-              {/* <Legend /> */}
               <Bar dataKey="value" />
             </BarChart>
           </div>
@@ -72,6 +69,6 @@ export function ProjetosDeLeiPartidos() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
