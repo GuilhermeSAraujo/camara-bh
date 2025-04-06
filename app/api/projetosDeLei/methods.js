@@ -74,6 +74,11 @@ async function aprovados({ mandato, onlyApproved }) {
     returnObject.push({ ...author, party: vereadorParty });
   }
 
+  console.info(
+    new Date().toLocaleString('pt-BR'),
+    `VEREADORES_CACHE Size: ${VEREADORES_CACHE.size}`
+  );
+
   return returnObject;
 }
 
