@@ -115,8 +115,8 @@ async function aprovados({ mandato, onlyApproved }) {
 async function partidos({ onlyApproved }) {
   check(onlyApproved, Boolean);
 
-  const startYear = '2025';
-  const endYear = '2028';
+  const startYear = '2021';
+  const endYear = '2024';
 
   const projetosDeLei = await ProjetosDeLeiCollection.find(
     {

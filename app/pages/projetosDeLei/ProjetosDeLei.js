@@ -17,10 +17,10 @@ import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { getPartyColor } from '../../lib/utils';
 
-const filterOptions = ['2013;2016', '2017;2020', '2021;2024', '2025;2028'];
+const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 
 export function ProjetosDeLei() {
-  const [mandato, setMandato] = useState('2025;2028');
+  const [mandato, setMandato] = useState('2021;2024');
   const [onlyApproved, setOnlyApproved] = useState(false);
 
   const [data, { isLoading }] = useMethodWithState({
