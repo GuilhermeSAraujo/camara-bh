@@ -8,15 +8,16 @@ async function aprovados({ mandato, onlyApproved }) {
   check(mandato, String);
   check(onlyApproved, Boolean);
 
-  const startYear = mandato.split(';')[0];
-  const endYear = mandato.split(';')[1];
+  const startYear = parseInt(mandato.split(';')[0], 10);
+  const endYear = parseInt(mandato.split(';')[1], 10);
 
   const projetosDeLei = await ProjetosDeLeiCollection.find(
     {
       $and: [
-        { author: { $regex: 'Ver\\.\\(a\\)', $options: 'i' } },
         { author: { $not: /;/ } },
-        { year: { $gte: startYear, $lte: endYear } },
+        {
+          year: { $gte: startYear, $lte: endYear },
+        },
         ...(onlyApproved ? [{ status: ProjetosDeLeiStatus.LEI }] : []),
       ],
     },
@@ -44,23 +45,68 @@ async function aprovados({ mandato, onlyApproved }) {
     .sort((a, b) => b.value - a.value);
 
   const returnObject = [];
+
   for await (const author of authors) {
     const { author: authorName } = author;
-    const vereador = await VereadoresCollection.findOneAsync(
-      {
-        $or: [
-          { name: { $regex: authorName, $options: 'i' } },
-          { fullName: { $regex: authorName, $options: 'i' } },
-        ],
-      },
-      { fields: { party: 1 } }
-    );
 
-    if (vereador?.party) {
-      author.party = vereador.party;
+    const authorNameNormalized = authorName
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+    let vereador = await VereadoresCollection.findOneAsync({
+      mandates: {
+        $elemMatch: {
+          startYear: { $gte: startYear },
+          endYear: { $lte: endYear },
+        },
+      },
+      $or: [
+        { name: { $regex: authorNameNormalized, $options: 'i' } },
+        { fullName: { $regex: authorNameNormalized, $options: 'i' } },
+        { names: { $regex: authorNameNormalized, $options: 'i' } },
+
+        { name: { $regex: authorName, $options: 'i' } },
+        { fullName: { $regex: authorName, $options: 'i' } },
+        { names: { $regex: authorName, $options: 'i' } },
+      ],
+    });
+
+    if (!vereador && authorNameNormalized.includes('-')) {
+      const [firstPart, lastPart] = authorNameNormalized.split('-');
+      const firstPartNormalized = firstPart
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+      const lastPartNormalized = lastPart
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
+      vereador = await VereadoresCollection.findOneAsync({
+        mandates: {
+          $elemMatch: {
+            startYear: { $gte: startYear },
+            endYear: { $lte: endYear },
+          },
+        },
+        $or: [
+          { name: { $regex: firstPartNormalized, $options: 'i' } },
+          { fullName: { $regex: firstPartNormalized, $options: 'i' } },
+          { names: { $regex: firstPartNormalized, $options: 'i' } },
+
+          { name: { $regex: lastPartNormalized, $options: 'i' } },
+          { fullName: { $regex: lastPartNormalized, $options: 'i' } },
+          { names: { $regex: lastPartNormalized, $options: 'i' } },
+        ],
+      });
     }
 
-    returnObject.push(author);
+    const vereadorParty =
+      vereador?.mandates.find(
+        (m) => m.startYear >= startYear && m.endYear <= endYear
+      )?.party || 'Desconhecido';
+
+    returnObject.push({ ...author, party: vereadorParty });
   }
 
   return authors;
