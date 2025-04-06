@@ -4,6 +4,8 @@ import { getPartyColor } from '../../lib/utils';
 import { VereadoresCollection } from '../vereadores';
 import { ProjetosDeLeiCollection, ProjetosDeLeiStatus } from './collection';
 
+const VEREADORES_CACHE = new Map();
+
 async function aprovados({ mandato, onlyApproved }) {
   check(mandato, String);
   check(onlyApproved, Boolean);
@@ -21,84 +23,47 @@ async function aprovados({ mandato, onlyApproved }) {
         ...(onlyApproved ? [{ status: ProjetosDeLeiStatus.LEI }] : []),
       ],
     },
-    { fields: { author: 1 } }
+    { fields: { author: 1, authorId: 1 } }
   ).fetchAsync();
 
   const groupedByAuthor = projetosDeLei.reduce((acc, projeto) => {
-    const { author } = projeto;
+    const { authorId, author } = projeto;
 
-    if (!acc[author]) {
-      acc[author] = { author, value: 0 };
+    if (!acc[authorId]) {
+      acc[authorId] = {
+        author: author.replace('Ver.(a) ', ''),
+        authorId,
+        value: 0,
+      };
     }
 
-    acc[author].value += 1;
+    acc[authorId].value += 1;
 
     return acc;
   }, {});
 
-  const authors = Object.values(groupedByAuthor)
-    .map((item) => ({
-      ...item,
-      // removendo prefixo vereador
-      author: item.author.replace(/^Ver\.\(a\)/, '').trim(),
-    }))
-    .sort((a, b) => b.value - a.value);
+  const authors = Object.values(groupedByAuthor).sort(
+    (a, b) => b.value - a.value
+  );
 
   const returnObject = [];
 
   for await (const author of authors) {
-    const { author: authorName } = author;
+    let vereador = VEREADORES_CACHE.get(author.author);
 
-    const authorNameNormalized = authorName
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
-
-    let vereador = await VereadoresCollection.findOneAsync({
-      mandates: {
-        $elemMatch: {
-          startYear: { $gte: startYear },
-          endYear: { $lte: endYear },
+    if (!vereador) {
+      vereador = await VereadoresCollection.findOneAsync(
+        {
+          _id: author.authorId,
         },
-      },
-      $or: [
-        { name: { $regex: authorNameNormalized, $options: 'i' } },
-        { fullName: { $regex: authorNameNormalized, $options: 'i' } },
-        { names: { $regex: authorNameNormalized, $options: 'i' } },
-
-        { name: { $regex: authorName, $options: 'i' } },
-        { fullName: { $regex: authorName, $options: 'i' } },
-        { names: { $regex: authorName, $options: 'i' } },
-      ],
-    });
-
-    if (!vereador && authorNameNormalized.includes('-')) {
-      const [firstPart, lastPart] = authorNameNormalized.split('-');
-      const firstPartNormalized = firstPart
-        .trim()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-      const lastPartNormalized = lastPart
-        .trim()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-
-      vereador = await VereadoresCollection.findOneAsync({
-        mandates: {
-          $elemMatch: {
-            startYear: { $gte: startYear },
-            endYear: { $lte: endYear },
+        {
+          fields: {
+            mandates: 1,
           },
-        },
-        $or: [
-          { name: { $regex: firstPartNormalized, $options: 'i' } },
-          { fullName: { $regex: firstPartNormalized, $options: 'i' } },
-          { names: { $regex: firstPartNormalized, $options: 'i' } },
+        }
+      );
 
-          { name: { $regex: lastPartNormalized, $options: 'i' } },
-          { fullName: { $regex: lastPartNormalized, $options: 'i' } },
-          { names: { $regex: lastPartNormalized, $options: 'i' } },
-        ],
-      });
+      VEREADORES_CACHE.set(author.author, vereador);
     }
 
     const vereadorParty =
@@ -109,7 +74,7 @@ async function aprovados({ mandato, onlyApproved }) {
     returnObject.push({ ...author, party: vereadorParty });
   }
 
-  return authors;
+  return returnObject;
 }
 
 async function partidos({ onlyApproved }) {
