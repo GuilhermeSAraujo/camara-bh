@@ -1,4 +1,3 @@
-// ProjetosDeLei.js
 import { FileCheck, Filter } from 'lucide-react';
 import React, { Suspense, useState } from 'react';
 import { Label } from '../../components/ui/Label';
@@ -18,7 +17,16 @@ import { useMethodWithState } from '../../hooks/useMethodWithState';
 const ChartDetailsModal = React.lazy(
   () => import('../../components/ui/ChartDetailsModal')
 );
-const ProjetosDeLeiList = React.lazy(() => import('./ProjetosDeLeiList'));
+const ProjetosDeLeiList = React.lazy(
+  () =>
+    new Promise((resolve) => {
+      import('./ProjetosDeLeiList').then((module) => {
+        setTimeout(() => {
+          resolve(module);
+        }, 100);
+      });
+    })
+);
 
 const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 

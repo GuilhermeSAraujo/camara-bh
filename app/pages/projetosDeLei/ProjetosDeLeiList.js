@@ -1,4 +1,3 @@
-// ProjetosDeLeiList.js
 import React from 'react';
 import { Progress } from '../../components/ui/Progress';
 import { getPartyColor } from '../../lib/utils';

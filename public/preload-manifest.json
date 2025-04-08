@@ -1,0 +1,6 @@
+{
+    "criticalComponents": [
+      "/app/pages/projetosDeLei/ProjetosDeLeiList.js",
+      "/app/components/ui/ChartDetailsModal.js"
+    ]
+  }
