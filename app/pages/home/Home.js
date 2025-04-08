@@ -77,7 +77,7 @@ export function Home() {
         </div>
         <div className="col-span-1 flex w-full items-center justify-center md:col-span-1">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bras%C3%A3o-Belo-Horizonte.svg/1200px-Bras%C3%A3o-Belo-Horizonte.svg.png"
+            src="/brasao-bh.png"
             alt="Bandeira de Belo Horizonte"
             className="h-auto w-full max-w-[230px]"
           />

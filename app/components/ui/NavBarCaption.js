@@ -16,7 +16,7 @@ export function NavBarCaption({ handleItemClick }) {
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
         >
           <div className="flex aspect-square size-12 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bras%C3%A3o-Belo-Horizonte.svg/1200px-Bras%C3%A3o-Belo-Horizonte.svg.png" />
+            <img src="/brasao-bh.png" alt="Brasão de Belo Horizonte" />
           </div>
           <div
             className="flex cursor-pointer flex-col gap-0.5 leading-none"
