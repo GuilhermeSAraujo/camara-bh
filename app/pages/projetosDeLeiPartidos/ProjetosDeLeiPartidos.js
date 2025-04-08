@@ -7,7 +7,7 @@ import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 
-export default function ProjetosDeLeiPartidos() {
+export function ProjetosDeLeiPartidos() {
   const [onlyApproved, setOnlyApproved] = useState(false);
 
   const [data, { isLoading }] = useMethodWithState({
