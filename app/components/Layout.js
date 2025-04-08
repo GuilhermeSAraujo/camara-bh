@@ -12,7 +12,7 @@ import { Separator } from './ui/Separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './ui/Sidebar';
 import { Outlet } from 'react-router-dom';
 
-export function Layout() {
+export default function Layout() {
   const [breadcrumb, setBreadcrumb] = useState({
     group: 'Geral',
   });

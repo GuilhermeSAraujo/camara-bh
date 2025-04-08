@@ -11,7 +11,7 @@ import {
 } from '../../components/ui/Card';
 import { RoutePaths } from '../../general/RoutePaths';
 
-export function Home() {
+export default function Home() {
   const navigate = useNavigate();
 
   const { setOpen } = useSidebar();

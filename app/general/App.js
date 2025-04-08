@@ -9,9 +9,9 @@ import { Loading } from '../components/Loading';
 export function App() {
   return (
     <>
-      <RouterProvider router={router}>
-        <Suspense fallback={<Loading name="suspense" />} />
-      </RouterProvider>
+      <Suspense fallback={<Loading name="suspense" />}>
+        <RouterProvider router={router} />
+      </Suspense>
 
       <Toaster />
     </>

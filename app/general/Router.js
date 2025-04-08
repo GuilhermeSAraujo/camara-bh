@@ -1,11 +1,16 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import { Layout } from '../components/Layout';
 import { RoutePaths } from './RoutePaths';
-import { Home } from '../pages/home/Home';
-import { ProjetosDeLei } from '../pages/projetosDeLei/ProjetosDeLei';
-import { ProjetosDeLeiPartidos } from '../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos';
-import { Vereadores } from '../pages/vereadores/Vereadores';
+
+const Home = React.lazy(() => import('../pages/home/Home'));
+const Layout = React.lazy(() => import('../components/Layout'));
+const ProjetosDeLei = React.lazy(
+  () => import('../pages/projetosDeLei/ProjetosDeLei')
+);
+const ProjetosDeLeiPartidos = React.lazy(
+  () => import('../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos')
+);
+const Vereadores = React.lazy(() => import('../pages/vereadores/Vereadores'));
 
 export const router = createBrowserRouter([
   {
