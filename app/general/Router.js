@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { RoutePaths } from './RoutePaths';
@@ -23,6 +23,9 @@ const Vereadores = lazy(() =>
   }))
 );
 
+// Loading component to show while chunks are loading
+const LoadingFallback = () => <div>Carregando...</div>;
+
 export const router = createBrowserRouter([
   {
     path: RoutePaths.APP,
@@ -30,19 +33,35 @@ export const router = createBrowserRouter([
     children: [
       {
         path: RoutePaths.APP,
-        element: <Home />,
+        element: (
+          <Suspense fallback={<LoadingFallback />}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: RoutePaths.PROJETOS_DE_LEI,
-        element: <ProjetosDeLei />,
+        element: (
+          <Suspense fallback={<LoadingFallback />}>
+            <ProjetosDeLei />
+          </Suspense>
+        ),
       },
       {
         path: RoutePaths.PROJETOS_DE_LEI_POR_PARTIDOS,
-        element: <ProjetosDeLeiPartidos />,
+        element: (
+          <Suspense fallback={<LoadingFallback />}>
+            <ProjetosDeLeiPartidos />
+          </Suspense>
+        ),
       },
       {
         path: RoutePaths.VEREADORES,
-        element: <Vereadores />,
+        element: (
+          <Suspense fallback={<LoadingFallback />}>
+            <Vereadores />
+          </Suspense>
+        ),
       },
     ],
   },
