@@ -2,10 +2,10 @@ import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { RoutePaths } from './RoutePaths';
-import Home from '../pages/home/Home';
-import ProjetosDeLei from '../pages/projetosDeLei/ProjetosDeLei';
-import ProjetosDeLeiPartidos from '../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos';
-import Vereadores from '../pages/vereadores/Vereadores';
+import { Home } from '../pages/home/Home';
+import { ProjetosDeLei } from '../pages/projetosDeLei/ProjetosDeLei';
+import { ProjetosDeLeiPartidos } from '../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos';
+import { Vereadores } from '../pages/vereadores/Vereadores';
 
 export const router = createBrowserRouter([
   {
