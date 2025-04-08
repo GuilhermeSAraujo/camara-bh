@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { RoutePaths } from './RoutePaths';
 
-// Lazy load das páginas com export default
+// Lazy load the pages with export default
 const Home = lazy(() => import('../pages/home/Home'));
 const ProjetosDeLei = lazy(
   () => import('../pages/projetosDeLei/ProjetosDeLei')
@@ -13,7 +13,7 @@ const ProjetosDeLeiPartidos = lazy(
 );
 const Vereadores = lazy(() => import('../pages/vereadores/Vereadores'));
 
-// Componente de loading
+// Loading component
 const LoadingFallback = () => <div>Carregando...</div>;
 
 export const router = createBrowserRouter([
@@ -23,7 +23,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: RoutePaths.APP,
-        element: <Home />,
+        element: (
+          <Suspense fallback={<LoadingFallback />}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: RoutePaths.PROJETOS_DE_LEI,
