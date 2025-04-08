@@ -1,8 +1,7 @@
+// ProjetosDeLei.js
 import { FileCheck, Filter } from 'lucide-react';
-import React, { useState } from 'react';
-import { ChartDetailsModal } from '../../components/ui/ChartDetailsModal';
+import React, { Suspense, useState } from 'react';
 import { Label } from '../../components/ui/Label';
-import { Progress } from '../../components/ui/Progress';
 import {
   Select,
   SelectContent,
@@ -15,7 +14,11 @@ import {
 import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
-import { getPartyColor } from '../../lib/utils';
+
+const ChartDetailsModal = React.lazy(
+  () => import('../../components/ui/ChartDetailsModal')
+);
+const ProjetosDeLeiList = React.lazy(() => import('./ProjetosDeLeiList'));
 
 const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 
@@ -31,22 +34,7 @@ export default function ProjetosDeLei() {
 
   function handleChangeMandato(value) {
     if (value === mandato) return;
-
     setMandato(value);
-  }
-
-  function getTotalLaws() {
-    if (!data?.length) return 0;
-
-    return data.reduce((acc, item) => acc + item.value, 0);
-  }
-
-  function getChartTitle() {
-    const total = getTotalLaws();
-    if (onlyApproved) {
-      return `Projetos de Lei Aprovados entre ${mandato.split(';')[0]} - ${mandato.split(';')[1]}: ${total}`;
-    }
-    return `Projetos de Lei Propostos entre ${mandato.split(';')[0]} - ${mandato.split(';')[1]}: ${total}`;
   }
 
   return (
@@ -60,65 +48,79 @@ export default function ProjetosDeLei() {
 
       <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-6">
         <div className="flex items-center">
-          <Filter size="20px" />
+          <Filter size="20px" aria-hidden="true" />
           <Label className="text-md px-3">Selecione o mandato</Label>
-          <Select value={mandato} onValueChange={handleChangeMandato}>
+          <Select
+            value={mandato}
+            onValueChange={handleChangeMandato}
+            aria-label="Selecione o mandato"
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Selecione o mandato desejado" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Mandatos</SelectLabel>
-                {filterOptions &&
-                  filterOptions.map((year) => (
-                    <SelectItem key={year} value={year}>
-                      {year.replace(';', ' - ')}
-                    </SelectItem>
-                  ))}
+                {filterOptions.map((year) => (
+                  <SelectItem key={year} value={year}>
+                    {year.replace(';', ' - ')}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
         <div className="flex items-center">
-          <FileCheck size="20px" />
-          <Label id="onlyApproved" className="text-md px-3">
+          <FileCheck size="20px" aria-hidden="true" />
+          <Label htmlFor="onlyApprovedSwitch" className="text-md px-3">
             Apenas <span className="font-semibold">Aprovados</span>
           </Label>
           <Switch
+            id="onlyApprovedSwitch"
             checked={onlyApproved}
             onCheckedChange={() => setOnlyApproved((v) => !v)}
-            htmlFor="onlyApproved"
           />
         </div>
         <div className="flex justify-start">
-          <ChartDetailsModal />
+          <Suspense
+            fallback={
+              <Spinner
+                className="mt-12"
+                size="large"
+                role="status"
+                aria-live="polite"
+              />
+            }
+          >
+            <ChartDetailsModal />
+          </Suspense>
         </div>
       </div>
 
       {isLoading ? (
-        <Spinner className="mt-12" size="large" />
+        <Spinner
+          className="mt-12"
+          size="large"
+          role="status"
+          aria-live="polite"
+        />
       ) : data?.length > 0 ? (
-        <div className="mt-10 grid grid-cols-5 gap-4 md:grid-cols-7">
-          <div className="hidden md:col-span-2 md:block" />
-          <div className="col-span-5 mt-4 text-center font-bold md:col-span-3 md:mt-0 md:text-left">
-            {getChartTitle()}
-          </div>
-          <div className="hidden md:col-span-2 md:block" />
-          {data.map((item) => (
-            <React.Fragment key={item.author}>
-              <h3 className="col-span-2 items-center md:col-span-1">
-                {item.author}
-              </h3>
-              <Progress
-                barColor={getPartyColor(item.party)}
-                className="col-span-2 md:col-span-5"
-                value={item.value}
-                max={data[0]?.value}
-              />
-              <h3 className="col-span-1">{item.value}</h3>
-            </React.Fragment>
-          ))}
-        </div>
+        <Suspense
+          fallback={
+            <Spinner
+              className="mt-12"
+              size="large"
+              role="status"
+              aria-live="polite"
+            />
+          }
+        >
+          <ProjetosDeLeiList
+            data={data}
+            mandato={mandato}
+            onlyApproved={onlyApproved}
+          />
+        </Suspense>
       ) : (
         <div className="mt-12 text-center">
           <h3 className="text-lg">

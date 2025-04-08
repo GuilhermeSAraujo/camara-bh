@@ -1,7 +1,7 @@
 import { FileCheck } from 'lucide-react';
 import React, { useState } from 'react';
 import { Bar, BarChart, Tooltip, XAxis, YAxis } from 'recharts';
-import { ChartDetailsModal } from '../../components/ui/ChartDetailsModal';
+import ChartDetailsModal from '../../components/ui/ChartDetailsModal';
 import { Label } from '../../components/ui/Label';
 import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
@@ -19,12 +19,12 @@ export default function ProjetosDeLeiPartidos() {
   return (
     <div>
       <div className="container mx-auto max-w-xs p-4 md:max-w-7xl">
-        <div className="self-center">
+        <header className="self-center">
           <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
             <span className="underline">Projetos de Lei</span> propostos e
             aprovados por <span className="underline">Partido</span>
           </h2>
-        </div>
+        </header>
 
         <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-6">
           <div className="flex items-center">

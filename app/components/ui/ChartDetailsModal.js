@@ -11,7 +11,7 @@ import {
 } from './Dialog';
 import { Label } from './Label';
 
-export function ChartDetailsModal() {
+export default function ChartDetailsModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
