@@ -2,11 +2,9 @@ import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { RoutePaths } from './RoutePaths';
+import { Home } from '../pages/home/Home';
 
 // Lazy load all page components
-const Home = lazy(() =>
-  import('../pages/home/Home').then((module) => ({ default: module.Home }))
-);
 const ProjetosDeLei = lazy(() =>
   import('../pages/projetosDeLei/ProjetosDeLei').then((module) => ({
     default: module.ProjetosDeLei,
@@ -33,11 +31,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: RoutePaths.APP,
-        element: (
-          <Suspense fallback={<LoadingFallback />}>
-            <Home />
-          </Suspense>
-        ),
+        element: <Home />,
       },
       {
         path: RoutePaths.PROJETOS_DE_LEI,
