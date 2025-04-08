@@ -1,20 +1,11 @@
-import React, { lazy, Suspense } from 'react';
+import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { RoutePaths } from './RoutePaths';
-
-// Lazy load the pages with export default
-const Home = lazy(() => import('../pages/home/Home'));
-const ProjetosDeLei = lazy(
-  () => import('../pages/projetosDeLei/ProjetosDeLei')
-);
-const ProjetosDeLeiPartidos = lazy(
-  () => import('../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos')
-);
-const Vereadores = lazy(() => import('../pages/vereadores/Vereadores'));
-
-// Loading component
-const LoadingFallback = () => <div>Carregando...</div>;
+import Home from '../pages/home/Home';
+import ProjetosDeLei from '../pages/projetosDeLei/ProjetosDeLei';
+import ProjetosDeLeiPartidos from '../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos';
+import Vereadores from '../pages/vereadores/Vereadores';
 
 export const router = createBrowserRouter([
   {
@@ -23,35 +14,19 @@ export const router = createBrowserRouter([
     children: [
       {
         path: RoutePaths.APP,
-        element: (
-          <Suspense fallback={<LoadingFallback />}>
-            <Home />
-          </Suspense>
-        ),
+        element: <Home />,
       },
       {
         path: RoutePaths.PROJETOS_DE_LEI,
-        element: (
-          <Suspense fallback={<LoadingFallback />}>
-            <ProjetosDeLei />
-          </Suspense>
-        ),
+        element: <ProjetosDeLei />,
       },
       {
         path: RoutePaths.PROJETOS_DE_LEI_POR_PARTIDOS,
-        element: (
-          <Suspense fallback={<LoadingFallback />}>
-            <ProjetosDeLeiPartidos />
-          </Suspense>
-        ),
+        element: <ProjetosDeLeiPartidos />,
       },
       {
         path: RoutePaths.VEREADORES,
-        element: (
-          <Suspense fallback={<LoadingFallback />}>
-            <Vereadores />
-          </Suspense>
-        ),
+        element: <Vereadores />,
       },
     ],
   },
