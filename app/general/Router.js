@@ -2,26 +2,18 @@ import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { RoutePaths } from './RoutePaths';
-import { Home } from '../pages/home/Home';
 
-// Lazy load all page components
-const ProjetosDeLei = lazy(() =>
-  import('../pages/projetosDeLei/ProjetosDeLei').then((module) => ({
-    default: module.ProjetosDeLei,
-  }))
+// Lazy load das páginas com export default
+const Home = lazy(() => import('../pages/home/Home'));
+const ProjetosDeLei = lazy(
+  () => import('../pages/projetosDeLei/ProjetosDeLei')
 );
-const ProjetosDeLeiPartidos = lazy(() =>
-  import('../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos').then(
-    (module) => ({ default: module.ProjetosDeLeiPartidos })
-  )
+const ProjetosDeLeiPartidos = lazy(
+  () => import('../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos')
 );
-const Vereadores = lazy(() =>
-  import('../pages/vereadores/Vereadores').then((module) => ({
-    default: module.Vereadores,
-  }))
-);
+const Vereadores = lazy(() => import('../pages/vereadores/Vereadores'));
 
-// Loading component to show while chunks are loading
+// Componente de loading
 const LoadingFallback = () => <div>Carregando...</div>;
 
 export const router = createBrowserRouter([
