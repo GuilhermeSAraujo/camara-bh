@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { AppSidebar } from './ui/AppSidebar';
 import {
   Breadcrumb,
@@ -11,6 +11,7 @@ import {
 import { Separator } from './ui/Separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './ui/Sidebar';
 import { Outlet } from 'react-router-dom';
+import { Loading } from './Loading';
 
 export default function Layout() {
   const [breadcrumb, setBreadcrumb] = useState({
@@ -45,7 +46,9 @@ export default function Layout() {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            <Outlet />
+            <Suspense fallback={<Loading name="suspense" />}>
+              <Outlet />
+            </Suspense>
           </div>
         </div>
       </SidebarInset>
