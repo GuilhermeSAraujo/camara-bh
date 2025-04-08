@@ -1,10 +1,8 @@
 import React, { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { Toaster } from 'sonner';
-
-import { router } from './Router';
-
 import { Loading } from '../components/Loading';
+import { router } from './Router';
 
 export function App() {
   return (
@@ -12,7 +10,6 @@ export function App() {
       <Suspense fallback={<Loading name="suspense" />}>
         <RouterProvider router={router} />
       </Suspense>
-
       <Toaster />
     </>
   );

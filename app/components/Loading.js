@@ -1,3 +1,4 @@
+import { Loader2 } from 'lucide-react';
 import React from 'react';
 
 export function Loading({ name }) {
@@ -8,9 +9,7 @@ export function Loading({ name }) {
 
   return (
     <div className="flex h-full flex-col items-center justify-center">
-      <div className="h-32 w-32 rounded-full border-b-2 border-gray-900">
-        loading
-      </div>
+      <Loader2 className="animate-spin" size={30} />
     </div>
   );
 }

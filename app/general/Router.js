@@ -1,16 +1,18 @@
-import React from 'react';
+// Router.js
+import React, { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { RoutePaths } from './RoutePaths';
 
-const Home = React.lazy(() => import('../pages/home/Home'));
-const Layout = React.lazy(() => import('../components/Layout'));
-const ProjetosDeLei = React.lazy(
-  () => import('../pages/projetosDeLei/ProjetosDeLei')
-);
-const ProjetosDeLeiPartidos = React.lazy(
-  () => import('../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos')
-);
-const Vereadores = React.lazy(() => import('../pages/vereadores/Vereadores'));
+// Ensure each module exports a default component (or remap via .then)
+// const Home = lazy(() => import('../pages/home/Home'));
+const Layout = lazy(() => import('../components/Layout'));
+// const ProjetosDeLei = lazy(
+//   () => import('../pages/projetosDeLei/ProjetosDeLei')
+// );
+// const ProjetosDeLeiPartidos = lazy(
+//   () => import('../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos')
+// );
+// const Vereadores = lazy(() => import('../pages/vereadores/Vereadores'));
 
 export const router = createBrowserRouter([
   {
@@ -19,19 +21,25 @@ export const router = createBrowserRouter([
     children: [
       {
         path: RoutePaths.APP,
-        element: <Home />,
+        Component: lazy(() => import('../pages/home/Home')),
+        // element: <Home />,
       },
       {
         path: RoutePaths.PROJETOS_DE_LEI,
-        element: <ProjetosDeLei />,
+        Component: lazy(() => import('../pages/projetosDeLei/ProjetosDeLei')),
+        // element: <ProjetosDeLei />,
       },
       {
         path: RoutePaths.PROJETOS_DE_LEI_POR_PARTIDOS,
-        element: <ProjetosDeLeiPartidos />,
+        Component: lazy(
+          () => import('../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos')
+        ),
+        // element: <ProjetosDeLeiPartidos />,
       },
       {
         path: RoutePaths.VEREADORES,
-        element: <Vereadores />,
+        Component: lazy(() => import('../pages/vereadores/Vereadores')),
+        // element: <Vereadores />,
       },
     ],
   },
