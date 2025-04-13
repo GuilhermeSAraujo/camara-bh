@@ -1,10 +1,10 @@
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
-import { getPartyColor } from '../../lib/utils';
 import { VereadoresCollection } from '../vereadores';
 import { ProjetosDeLeiCollection, ProjetosDeLeiStatus } from './collection';
 
 const VEREADORES_CACHE = new Map();
+const PARTIES_CACHE = new Map();
 
 async function aprovados({ mandato, onlyApproved }) {
   check(mandato, String);
@@ -16,7 +16,6 @@ async function aprovados({ mandato, onlyApproved }) {
   const projetosDeLei = await ProjetosDeLeiCollection.find(
     {
       $and: [
-        { author: { $not: /;/ } },
         {
           year: { $gte: startYear, $lte: endYear },
         },
@@ -82,54 +81,97 @@ async function aprovados({ mandato, onlyApproved }) {
   return returnObject;
 }
 
-async function partidos({ onlyApproved }) {
+async function partidos({ mandato, onlyApproved }) {
+  check(mandato, String);
   check(onlyApproved, Boolean);
 
-  const startYear = '2021';
-  const endYear = '2024';
+  const startYear = parseInt(mandato.split(';')[0], 10);
+  const endYear = parseInt(mandato.split(';')[1], 10);
 
-  const projetosDeLei = await ProjetosDeLeiCollection.find(
+  const projetosDeLei = ProjetosDeLeiCollection.find(
     {
       $and: [
-        { author: { $regex: 'Ver\\.\\(a\\)', $options: 'i' } },
-        { author: { $not: /;/ } },
-        { year: { $gte: startYear, $lte: endYear } },
+        {
+          year: { $gte: startYear, $lte: endYear },
+        },
         ...(onlyApproved ? [{ status: ProjetosDeLeiStatus.LEI }] : []),
       ],
     },
-    { fields: { author: 1 } }
-  ).fetchAsync();
+    { fields: { author: 1, authorId: 1 } }
+  );
 
   const groupedByParty = {};
 
-  for await (const projeto of projetosDeLei) {
-    const authorName = projeto.author.replace(/^Ver\.\(a\)/, '').trim();
-    const vereador = await VereadoresCollection.findOneAsync(
-      {
-        $or: [
-          { name: { $regex: authorName, $options: 'i' } },
-          { fullName: { $regex: authorName, $options: 'i' } },
-        ],
-      },
-      { fields: { party: 1 } }
-    );
+  for await (const projetoDeLei of projetosDeLei) {
+    const authorIdKey =
+      projetoDeLei.authorId &&
+      typeof projetoDeLei.authorId.toHexString === 'function'
+        ? projetoDeLei.authorId.toHexString()
+        : projetoDeLei.authorId.toString();
 
-    const party = vereador?.party || 'Desconhecido';
-    const shortParty = party.slice(0, 5);
+    if (PARTIES_CACHE.has(authorIdKey)) {
+      const vereador = PARTIES_CACHE.get(authorIdKey);
 
-    if (!groupedByParty[party]) {
-      groupedByParty[party] = {
-        party: shortParty,
-        fullParty: party,
-        value: 0,
-        fill: getPartyColor(party),
-      };
+      const vereadorParty = vereador.mandates.find(
+        (m) => m.startYear >= startYear && m.endYear <= endYear
+      )?.party;
+
+      if (vereadorParty) {
+        if (!groupedByParty[vereadorParty]) {
+          groupedByParty[vereadorParty] = {
+            party: vereadorParty,
+            value: 0,
+          };
+        }
+
+        groupedByParty[vereadorParty].value += 1;
+      }
+      continue;
     }
 
-    groupedByParty[party].value += 1;
+    const vereador = await VereadoresCollection.findOneAsync(
+      {
+        _id: projetoDeLei.authorId,
+      },
+      {
+        fields: {
+          mandates: 1,
+        },
+      }
+    );
+
+    if (!vereador) {
+      continue;
+    }
+
+    PARTIES_CACHE.set(authorIdKey, vereador);
+
+    const vereadorParty = vereador.mandates.find(
+      (m) => m.startYear >= startYear && m.endYear <= endYear
+    )?.party;
+
+    if (vereadorParty) {
+      if (!groupedByParty[vereadorParty]) {
+        groupedByParty[vereadorParty] = {
+          party: vereadorParty,
+          value: 0,
+        };
+      }
+
+      groupedByParty[vereadorParty].value += 1;
+    }
   }
 
-  return Object.values(groupedByParty).sort((a, b) => b.value - a.value);
+  const parties = Object.values(groupedByParty).sort(
+    (a, b) => b.value - a.value
+  );
+
+  console.info(
+    new Date().toLocaleString('pt-BR'),
+    `PARTIES_CACHE Size: ${PARTIES_CACHE.size}`
+  );
+
+  return parties;
 }
 
 Meteor.methods({

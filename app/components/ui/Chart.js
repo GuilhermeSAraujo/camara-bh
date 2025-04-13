@@ -34,7 +34,7 @@ const ChartContainer = React.forwardRef(
           {...props}
         >
           <ChartStyle id={chartId} config={config} />
-          <RechartsPrimitive.ResponsiveContainer minHeight={1800}>
+          <RechartsPrimitive.ResponsiveContainer minHeight={500}>
             {children}
           </RechartsPrimitive.ResponsiveContainer>
         </div>
@@ -198,7 +198,8 @@ const ChartTooltipContent = React.forwardRef(
                       <div className="grid gap-1.5">
                         {nestLabel ? tooltipLabel : null}
                         <span className="text-muted-foreground">
-                          {itemConfig?.label || item.name}
+                          Quantidade
+                          {/* {itemConfig?.label || item.name} */}
                         </span>
                       </div>
                       {item.value && (
