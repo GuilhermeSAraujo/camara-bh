@@ -25,6 +25,11 @@ const data = {
       ariaLabel: 'Menu de projetos de lei',
       items: [
         {
+          title: 'Buscar',
+          url: RoutePaths.BUSCAR,
+          ariaLabel: 'Buscar projetos de lei',
+        },
+        {
           title: 'Por Vereadores',
           url: RoutePaths.PROJETOS_DE_LEI,
           ariaLabel: 'Ver projetos de lei por vereadores',

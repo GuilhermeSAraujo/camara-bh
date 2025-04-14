@@ -10,6 +10,9 @@ const ProjetosDeLei = React.lazy(
 const ProjetosDeLeiPartidos = React.lazy(
   () => import('../pages/projetosDeLeiPartidos/ProjetosDeLeiPartidos')
 );
+const SearchProjetoDeLei = React.lazy(
+  () => import('../pages/searchProjetoDeLei/SearchProjetoDeLei')
+);
 const Vereadores = React.lazy(() => import('../pages/vereadores/Vereadores'));
 
 export const router = createBrowserRouter([
@@ -20,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: RoutePaths.APP,
         element: <Home />,
+      },
+      {
+        path: RoutePaths.BUSCAR,
+        element: <SearchProjetoDeLei />,
       },
       {
         path: RoutePaths.PROJETOS_DE_LEI,

@@ -183,7 +183,31 @@ async function partidos({ mandato, onlyApproved }) {
   return parties;
 }
 
+async function search({ textSearch }) {
+  check(textSearch, String);
+
+  if (textSearch.trim() === '') {
+    return [];
+  }
+
+  const regex = new RegExp(textSearch, 'i');
+
+  const projetosDeLei = await ProjetosDeLeiCollection.find({
+    $or: [
+      { title: { $regex: regex } },
+      { author: { $regex: regex } },
+      { summary: { $regex: regex } },
+      { subject: { $regex: regex } },
+    ],
+  }).fetchAsync();
+
+  projetosDeLei.sort((a, b) => b.title.localeCompare(a.title));
+
+  return projetosDeLei;
+}
+
 Meteor.methods({
   'ProjetosDeLei.aprovados': aprovados,
   'ProjetosDeLei.partidos': partidos,
+  'ProjetosDeLei.search': search,
 });
