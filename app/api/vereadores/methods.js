@@ -20,7 +20,7 @@ export async function findById({ id }) {
   check(id, String);
 
   const vereador = await VereadoresCollection.findOneAsync({
-    $or: [{ idVereador: id }, { '_id._str': id }, { _id: id }],
+    $or: [{ idVereador: id }, { _id: id }],
   });
 
   return vereador;
