@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
 import { VereadoresCollection } from './collection';
 
 export async function create(data) {

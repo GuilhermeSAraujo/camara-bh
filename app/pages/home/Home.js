@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSidebar } from '../../components/ui/Sidebar';
 
-import { Scale } from 'lucide-react';
+import { BarChart2, Search, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -30,30 +30,32 @@ export default function Home() {
 
   const cardData = [
     {
-      title: 'Projetos de Lei',
+      title: 'Análise de Propostas',
       description:
-        'Veja quantos projetos de lei foram aprovados por cada vereador, partido e mandato. Compare o desempenho e acompanhe as propostas que impactam a cidade.',
+        'Veja estatísticas de projetos de lei por vereador, partido e mandato. Compare dados e acompanhe o desempenho legislativo dos representantes da cidade.',
       icon: {
-        element: <Scale size="30px" />,
+        element: <BarChart2 size="30px" />,
         onClick: () => handleCardRedirect(RoutePaths.PROJETOS_DE_LEI),
       },
       bgColor: 'bg-yellow-400',
     },
     {
-      title: 'Participação e Engajamento',
-      description: 'Gráfico de participação e engajamento',
+      title: 'Busca por Projetos de Lei',
+      description:
+        'Encontre projetos de lei específicos utilizando palavras-chave. Pesquise por temas de seu interesse e acompanhe as iniciativas legislativas relacionadas à sua comunidade.',
       icon: {
-        element: <Scale size="30px" />,
-        onClick: () => handleCardRedirect(RoutePaths.PARTICIPACAO_ENGAJAMENTO),
+        element: <Search size="30px" />,
+        onClick: () => handleCardRedirect(RoutePaths.BUSCAR),
       },
       bgColor: 'bg-blue-500',
     },
     {
-      title: 'Lista de Presença',
-      description: 'Gráfico da lista de presença',
+      title: 'Vereadores',
+      description:
+        'Consulte informações detalhadas sobre os vereadores, incluindo projetos apresentados, mandatos exercidos e afiliações partidárias. Conheça melhor seus representantes na Câmara Municipal.',
       icon: {
-        element: <Scale size="30px" />,
-        onClick: () => handleCardRedirect(RoutePaths.LISTA_DE_PRESENCA),
+        element: <Users size="30px" />,
+        onClick: () => handleCardRedirect(RoutePaths.VEREADORES),
       },
       bgColor: 'bg-green-500',
     },

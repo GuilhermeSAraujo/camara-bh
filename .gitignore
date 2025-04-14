@@ -7,3 +7,5 @@ jsconfig.json
 launch.json
 
 /private/env/
+
+.vscode

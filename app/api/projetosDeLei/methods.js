@@ -1,4 +1,4 @@
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { VereadoresCollection } from '../vereadores';
 import { ProjetosDeLeiCollection, ProjetosDeLeiStatus } from './collection';
@@ -183,25 +183,37 @@ async function partidos({ mandato, onlyApproved }) {
   return parties;
 }
 
-async function search({ textSearch }) {
-  check(textSearch, String);
+async function search({ textSearch, sortOrder, vereadorId }) {
+  check(textSearch, Match.Optional(String));
+  check(sortOrder, String);
+  check(vereadorId, Match.Any); // ObjectId || null
 
-  if (textSearch.trim() === '') {
+  const yearSort = sortOrder === 'Mais recentes' ? -1 : 1;
+
+  if (textSearch.trim() === '' && !vereadorId) {
     return [];
   }
 
-  const regex = new RegExp(textSearch, 'i');
+  const query = {
+    ...(vereadorId ? { authorId: vereadorId } : {}),
+  };
 
-  const projetosDeLei = await ProjetosDeLeiCollection.find({
-    $or: [
+  if (textSearch.trim() !== '') {
+    const regex = new RegExp(textSearch, 'i');
+
+    query.$or = [
       { title: { $regex: regex } },
       { author: { $regex: regex } },
       { summary: { $regex: regex } },
       { subject: { $regex: regex } },
-    ],
-  }).fetchAsync();
+    ];
+  }
 
-  projetosDeLei.sort((a, b) => b.title.localeCompare(a.title));
+  const projetosDeLei = await ProjetosDeLeiCollection.find(query, {
+    sort: {
+      year: yearSort,
+    },
+  }).fetchAsync();
 
   return projetosDeLei;
 }
