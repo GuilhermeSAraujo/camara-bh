@@ -13,6 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from './Sidebar';
 
 // This is sample data.
@@ -71,6 +72,7 @@ const data = {
 export function AppSidebar({ setBreadcrumb, ...props }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { setOpen } = useSidebar();
 
   // Initialize with current path active
   const initializeNavItems = () =>
@@ -106,6 +108,14 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
     }));
 
     setNavItems(updatedNavItems);
+
+    // if is mobile close sidebar
+    if (window.innerWidth < 1024) {
+      setOpen(false);
+    }
+
+    // Scroll to top
+    window.scrollTo(0, 0);
   };
 
   const handleKeyDown = (event, action) => {
