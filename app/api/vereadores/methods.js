@@ -16,14 +16,29 @@ export async function remove(_id) {
   return VereadoresCollection.removeAsync(_id);
 }
 
-export async function findById(_id) {
-  check(_id, String);
-  return VereadoresCollection.findOneAsync(_id);
+export async function findById({ id }) {
+  check(id, String);
+  
+  const vereador = await VereadoresCollection.findOneAsync({
+    $or: [
+      { idVereador: id },
+      { '_id._str': id },
+      { _id: id }
+    ]
+  });
+  
+  return vereador;
+}
+
+export async function list() {
+  const result = await VereadoresCollection.find({}).fetchAsync();
+  return result;
 }
 
 Meteor.methods({
   'Vereadores.create': create,
   'Vereadores.update': update,
   'Vereadores.remove': remove,
-  'Vereadores.find': findById
+  'Vereadores.find': findById,
+  'Vereadores.list': list,
 });

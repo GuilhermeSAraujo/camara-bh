@@ -40,6 +40,8 @@ export default function ProjetosDeLei() {
     dependencyArray: [mandato, onlyApproved],
   });
 
+  console.log(data);
+  
   function handleChangeMandato(value) {
     if (value === mandato) return;
     setMandato(value);

@@ -206,8 +206,41 @@ async function search({ textSearch }) {
   return projetosDeLei;
 }
 
+async function porVereador({ id }) {
+  try {
+    if (!id) {
+      throw new Meteor.Error(
+        'invalid-parameters',
+        'ID do vereador não pode ser nulo'
+      );
+    }
+  
+    check(id, String);
+    
+    const query = {
+      $or: [
+        { authorId: new Mongo.ObjectID(id) },
+        { 'authorId._str': id },
+        { authorId: id }
+      ]
+    };
+  
+    return ProjetosDeLeiCollection.find(
+      query,
+      { sort: { year: -1 } }
+    ).fetchAsync();
+  
+  } catch (error) {
+    throw new Meteor.Error(
+      'projetos-de-lei.erro',
+      'Erro ao buscar projetos de lei do vereador'
+    );
+  }
+}
+
 Meteor.methods({
   'ProjetosDeLei.aprovados': aprovados,
   'ProjetosDeLei.partidos': partidos,
   'ProjetosDeLei.search': search,
-});
+  'ProjetosDeLei.porVereador': porVereador,
+  });

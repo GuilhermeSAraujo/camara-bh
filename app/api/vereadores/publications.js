@@ -1,6 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import { VereadoresCollection } from './collection';
 
-Meteor.publish('allVereadoress', function publishVereadoress() {
-  return VereadoresCollection.find({});
+Meteor.publish('vereadores', () => VereadoresCollection.find());
+Meteor.publish('vereador', function(id) {
+    check(id, String);
+    return VereadoresCollection.find({
+      $or: [
+        { idVereador: id },
+        { '_id._str': id },
+        { _id: id }
+      ]
+    });
 });
