@@ -1,5 +1,5 @@
-import { Filter, SortAsc } from 'lucide-react';
-import React, { useState } from 'react';
+import { Filter, SortAsc, Users } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import {
   Card,
@@ -45,12 +45,26 @@ function getStatusColor(status) {
 export default function SearchProjetoDeLei() {
   const [textSearch, setTextSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('Mais recentes');
+  const [vereadorId, setVereadorId] = useState(null);
+  const [partyId, setPartyId] = useState(null);
+
+  const [chartTitle, setChartTitle] = useState('Projetos de Lei');
 
   const [data, { isLoading, refetch }] = useMethodWithState({
     method: 'ProjetosDeLei.search',
-    params: { textSearch, sortOrder },
+    params: { textSearch, sortOrder, vereadorId },
     dependencyArray: [sortOrder],
   });
+
+  const [vereadoresSelect] = useMethodWithState({
+    method: 'Vereadores.list',
+    params: {},
+    dependencyArray: [],
+  });
+
+  useEffect(() => {
+    getChartTitle();
+  }, [data]);
 
   function handleSortOrderChange(value) {
     if (value === sortOrder) {
@@ -60,8 +74,40 @@ export default function SearchProjetoDeLei() {
     setSortOrder(value);
   }
 
+  function handleSortVereadorChange(value) {
+    if (value === vereadorId) {
+      return;
+    }
+
+    setVereadorId(value);
+  }
+
   async function handleSearch() {
     await refetch();
+  }
+
+  function getChartTitle() {
+    if (!data || data.length === 0) {
+      setChartTitle(
+        'Nenhum projeto de lei encontrado com os filtros aplicados'
+      );
+      return;
+    }
+
+    let title = '';
+    if (vereadorId) {
+      const vereador = vereadoresSelect.find((v) => v._id === vereadorId);
+      title += `Projetos de Lei propostos por ${vereador.name}`;
+    }
+
+    if (textSearch) {
+      if (!title) {
+        title += 'Projetos de Lei';
+      }
+      title += ` com as palavras-chave "${textSearch}"`;
+    }
+
+    setChartTitle(title);
   }
 
   return (
@@ -91,6 +137,32 @@ export default function SearchProjetoDeLei() {
             className="w-full md:max-w-xs md:flex-grow"
             placeholder="Animais | Saúde | Educação | Esporte"
           />
+        </div>
+
+        {/* Filtro de vereadores */}
+        <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
+          <div className="flex items-center gap-2 md:flex-shrink-0">
+            <Users size="20px" aria-hidden="true" />
+            <Label className="text-md whitespace-nowrap">
+              Filtrar por Vereador(a)
+            </Label>
+          </div>
+
+          <Select
+            value={vereadorId || undefined}
+            onValueChange={handleSortVereadorChange}
+          >
+            <SelectTrigger className="w-full md:max-w-xs">
+              <SelectValue placeholder="Selecione o Vereador(a)" />
+            </SelectTrigger>
+            <SelectContent>
+              {vereadoresSelect?.map((v) => (
+                <SelectItem key={v._id} value={v._id}>
+                  {v.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Filtro de ordenação */}
@@ -127,28 +199,36 @@ export default function SearchProjetoDeLei() {
           aria-live="polite"
         />
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {data?.map((projeto) => (
-            <Card key={projeto._id} className="flex h-full flex-col">
-              <CardHeader>
-                <CardTitle className="text-xl">{projeto.title}</CardTitle>
-                <CardDescription>{projeto.author}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <p>{projeto.summary}</p>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <span className="text-sm text-gray-600">
-                  Ano: {projeto.year}
-                </span>
-                <span
-                  className={`font-medium ${getStatusColor(projeto.status)}`}
-                >
-                  {projeto.status}
-                </span>
-              </CardFooter>
-            </Card>
-          ))}
+        <div>
+          <div className="mt-4 text-center font-bold">{chartTitle}</div>
+          <div className="mt-2 text-center">
+            <p className="text-sm text-gray-600">
+              Resultados encontrados: {data?.length || 0}
+            </p>
+          </div>
+          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {data?.map((projeto) => (
+              <Card key={projeto._id} className="flex h-full flex-col">
+                <CardHeader>
+                  <CardTitle className="text-xl">{projeto.title}</CardTitle>
+                  <CardDescription>{projeto.author}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <p>{projeto.summary}</p>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <span className="text-sm text-gray-600">
+                    Ano: {projeto.year}
+                  </span>
+                  <span
+                    className={`font-medium ${getStatusColor(projeto.status)}`}
+                  >
+                    {projeto.status}
+                  </span>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
         </div>
       )}
     </div>

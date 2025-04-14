@@ -109,11 +109,7 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
 
     setNavItems(updatedNavItems);
 
-    // if is mobile close sidebar
-    if (window.innerWidth < 1024) {
-      setOpen(false);
-    }
-
+    setOpen(false);
     // Scroll to top
     window.scrollTo(0, 0);
   };
