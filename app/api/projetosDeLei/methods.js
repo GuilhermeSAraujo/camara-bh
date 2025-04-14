@@ -183,8 +183,11 @@ async function partidos({ mandato, onlyApproved }) {
   return parties;
 }
 
-async function search({ textSearch }) {
+async function search({ textSearch, sortOrder }) {
   check(textSearch, String);
+  check(sortOrder, String);
+
+  const yearSort = sortOrder === 'Mais recentes' ? -1 : 1;
 
   if (textSearch.trim() === '') {
     return [];
@@ -192,16 +195,21 @@ async function search({ textSearch }) {
 
   const regex = new RegExp(textSearch, 'i');
 
-  const projetosDeLei = await ProjetosDeLeiCollection.find({
-    $or: [
-      { title: { $regex: regex } },
-      { author: { $regex: regex } },
-      { summary: { $regex: regex } },
-      { subject: { $regex: regex } },
-    ],
-  }).fetchAsync();
-
-  projetosDeLei.sort((a, b) => b.title.localeCompare(a.title));
+  const projetosDeLei = await ProjetosDeLeiCollection.find(
+    {
+      $or: [
+        { title: { $regex: regex } },
+        { author: { $regex: regex } },
+        { summary: { $regex: regex } },
+        { subject: { $regex: regex } },
+      ],
+    },
+    {
+      sort: {
+        year: yearSort,
+      },
+    }
+  ).fetchAsync();
 
   return projetosDeLei;
 }

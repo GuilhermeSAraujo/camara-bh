@@ -1,4 +1,4 @@
-import { Filter } from 'lucide-react';
+import { Filter, SortAsc } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import {
@@ -11,6 +11,13 @@ import {
 } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Label } from '../../components/ui/Label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../components/ui/Select';
 import { Spinner } from '../../components/ui/Spinner';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 
@@ -22,6 +29,12 @@ function getStatusColor(status) {
       return 'text-red-600';
     case 'Em redação final':
       return 'text-blue-600';
+    case 'Primeiro turno':
+      return 'text-blue-600';
+    case 'Segundo turno':
+      return 'text-blue-600';
+    case 'Proposição de Lei':
+      return 'text-blue-600';
     case 'Retirada':
       return 'text-yellow-600';
     default:
@@ -31,12 +44,21 @@ function getStatusColor(status) {
 
 export default function SearchProjetoDeLei() {
   const [textSearch, setTextSearch] = useState('');
+  const [sortOrder, setSortOrder] = useState('Mais recentes');
 
   const [data, { isLoading, refetch }] = useMethodWithState({
     method: 'ProjetosDeLei.search',
-    params: { textSearch },
-    dependencyArray: [],
+    params: { textSearch, sortOrder },
+    dependencyArray: [sortOrder],
   });
+
+  function handleSortOrderChange(value) {
+    if (value === sortOrder) {
+      return;
+    }
+
+    setSortOrder(value);
+  }
 
   async function handleSearch() {
     await refetch();
@@ -61,26 +83,40 @@ export default function SearchProjetoDeLei() {
             </Label>
           </div>
 
-          {/* Input e botão em proporção 3/4 e 1/4 no mobile, inline no desktop */}
-          <div className="grid w-full grid-cols-4 gap-2 md:flex md:flex-grow md:gap-3">
-            <Input
-              value={textSearch}
-              onChange={(e) => setTextSearch(e.target.value)}
-              type="text"
-              className="col-span-3 md:max-w-md md:flex-grow"
-              placeholder="Animais | Saúde | Educação | Esporte"
-            />
-            <Button
-              onClick={handleSearch}
-              className="col-span-1 md:flex-shrink-0"
-            >
-              Pesquisar
-            </Button>
-          </div>
+          {/* Input de pesquisa */}
+          <Input
+            value={textSearch}
+            onChange={(e) => setTextSearch(e.target.value)}
+            type="text"
+            className="w-full md:max-w-xs md:flex-grow"
+            placeholder="Animais | Saúde | Educação | Esporte"
+          />
         </div>
 
-        {/* Espaço reservado para filtros adicionais */}
-        {/* outros filtros serão adicionados aqui */}
+        {/* Filtro de ordenação */}
+        <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
+          <div className="flex items-center gap-2 md:flex-shrink-0">
+            <SortAsc size="20px" aria-hidden="true" />
+            <Label className="text-md whitespace-nowrap">Ordenar por</Label>
+          </div>
+
+          <Select value={sortOrder} onValueChange={handleSortOrderChange}>
+            <SelectTrigger className="w-full md:max-w-xs">
+              <SelectValue placeholder="Selecione a ordenação" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Mais recentes">Mais recentes</SelectItem>
+              <SelectItem value="Mais antigos">Mais antigos</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Botão de pesquisa após todos os filtros */}
+        <div className="mt-2 flex justify-start">
+          <Button onClick={handleSearch} className="w-full md:w-auto">
+            Pesquisar
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (
