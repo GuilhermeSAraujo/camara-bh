@@ -1,3 +1,4 @@
+import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { VereadoresCollection } from './collection';
 
@@ -17,15 +18,11 @@ export async function remove(_id) {
 
 export async function findById({ id }) {
   check(id, String);
-  
+
   const vereador = await VereadoresCollection.findOneAsync({
-    $or: [
-      { idVereador: id },
-      { '_id._str': id },
-      { _id: id }
-    ]
+    $or: [{ idVereador: id }, { '_id._str': id }, { _id: id }],
   });
-  
+
   return vereador;
 }
 
