@@ -1,12 +1,7 @@
 import { Loader2 } from 'lucide-react';
 import React from 'react';
 
-export function Loading({ name }) {
-  if (name) {
-    // eslint-disable-next-line no-console
-    console.log('Loading', name);
-  }
-
+export function Loading() {
   return (
     <div className="flex h-full flex-col items-center justify-center">
       <Loader2 className="animate-spin" size={30} />
