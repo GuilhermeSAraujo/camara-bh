@@ -79,7 +79,8 @@ export default function SearchProjetoDeLei() {
       return;
     }
 
-    setVereadorId(value);
+    // Se o valor for "all", defina como null
+    setVereadorId(value === 'all' ? null : value);
   }
 
   async function handleSearch() {
@@ -108,6 +109,18 @@ export default function SearchProjetoDeLei() {
     }
 
     setChartTitle(title);
+  }
+
+  function handleClickProjeto(projeto) {
+    const baseUrl =
+      'https://www.cmbh.mg.gov.br/atividade-legislativa/pesquisar-proposicoes/projeto-de-lei';
+
+    // Projeto de Lei - 123/2010
+    const number = projeto.title.split('- ')?.[1].split('/')?.[0].trim();
+    const year = projeto.title.split('/')?.[1].trim();
+    const url = `${baseUrl}/${number}/${year}`;
+
+    window.open(url, '_blank');
   }
 
   return (
@@ -149,13 +162,14 @@ export default function SearchProjetoDeLei() {
           </div>
 
           <Select
-            value={vereadorId || undefined}
+            value={vereadorId || 'all'}
             onValueChange={handleSortVereadorChange}
           >
             <SelectTrigger className="w-full md:max-w-xs">
               <SelectValue placeholder="Selecione o Vereador(a)" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="all">Todos os vereadores</SelectItem>
               {vereadoresSelect?.map((v) => (
                 <SelectItem key={v._id} value={v._id}>
                   {v.name}
@@ -208,7 +222,11 @@ export default function SearchProjetoDeLei() {
           </div>
           <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
             {data?.map((projeto) => (
-              <Card key={projeto._id} className="flex h-full flex-col">
+              <Card
+                key={projeto._id}
+                className="flex h-full flex-col hover:cursor-pointer"
+                onClick={() => handleClickProjeto(projeto)}
+              >
                 <CardHeader>
                   <CardTitle className="text-xl">{projeto.title}</CardTitle>
                   <CardDescription>{projeto.author}</CardDescription>
