@@ -70,6 +70,15 @@ async function aprovados({ mandato, onlyApproved }) {
         (m) => m.startYear >= startYear && m.endYear <= endYear
       )?.party || 'Desconhecido';
 
+    if (vereadorParty === 'Desconhecido') {
+      console.warn(
+        new Date().toLocaleString('pt-BR'),
+        `Vereador ${author.author} não possui partido definido para o mandato ${startYear} - ${endYear}`,
+        vereador,
+        { authorId: author.authorId }
+      );
+    }
+
     returnObject.push({ ...author, party: vereadorParty });
   }
 
