@@ -29,7 +29,7 @@ export function VereadorDetalhes() {
 
   useEffect(() => {
     if (vereador) {
-      const id = vereador._id?._str || vereador._id;
+      const id = vereador._id;
       setVereadorId(id);
     }
   }, [vereador]);
@@ -37,7 +37,7 @@ export function VereadorDetalhes() {
   const [projetosVereador] = useMethodWithState({
     method: 'ProjetosDeLei.porVereador',
     params: {
-      id: vereador?._id?._str || vereador?._id || vereadorId,
+      id: vereador?._id || vereadorId,
     },
     dependencyArray: [vereadorId, vereador],
   });
@@ -48,8 +48,8 @@ export function VereadorDetalhes() {
   const imageUrl = findFirstAvailableImage(vereador.mandates);
 
   return (
-    <div className="container mx-auto p-4 md:max-w-7xl">
-      <main className="flex-1 bg-gray-100 p-6">
+    <div className="flex h-screen">
+      <main className="flex-1 overflow-y-auto bg-gray-100 p-6">
         {/* Cabeçalho */}
         <div className="mb-6 flex items-center">
           <img
@@ -86,17 +86,17 @@ export function VereadorDetalhes() {
 
         {/* Projetos de Lei */}
         <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-xl font-bold">Projetos de Lei</h2>
-          <div className="mb-4 mt-2 text-start">
-            <p className="text-sm text-gray-600">
-              Resultados encontrados: {projetosVereador?.length || 0}
-            </p>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-bold">Projetos de Lei</h2>
+            <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
+              Total: {projetosVereador?.length || 0}
+            </span>
           </div>
           {projetosVereador && projetosVereador.length > 0 ? (
             <div className="space-y-4">
               {projetosVereador.map((projeto) => (
                 <div
-                  key={projeto._id}
+                  key={projeto._id?._str || projeto._id}
                   className="rounded-lg border p-4 transition-colors hover:bg-gray-50"
                 >
                   <h3 className="text-lg font-semibold">{projeto.title}</h3>
