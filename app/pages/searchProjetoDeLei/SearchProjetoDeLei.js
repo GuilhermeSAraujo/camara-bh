@@ -229,13 +229,14 @@ export default function SearchProjetoDeLei() {
   };
 
   return (
-    <div className="container mx-auto p-4 md:max-w-7xl">
+    <div className="container mx-auto max-w-sm p-4 md:max-w-7xl">
       <div className="self-center">
         <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
           Busque por <span className="underline">Projetos de Lei</span>
         </h2>
       </div>
 
+      {/* Filtros */}
       <div className="mt-10 grid grid-cols-1 gap-4">
         {/* Filtro de pesquisa por palavras-chave */}
         <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
@@ -251,6 +252,11 @@ export default function SearchProjetoDeLei() {
           <Input
             value={textSearch}
             onChange={(e) => setTextSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+            }}
             type="text"
             className="w-full md:max-w-xs md:flex-grow"
             placeholder="Animais | Saúde | Educação | Esporte"
@@ -304,22 +310,29 @@ export default function SearchProjetoDeLei() {
 
         {/* Filtro de aprovados */}
         <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
-          <div className="flex items-center gap-2 md:flex-shrink-0">
-            <FileCheck size="20px" aria-hidden="true" />
-            <Label htmlFor="onlyApprovedSwitch" className="text-md">
-              Apenas <span className="font-semibold">Aprovados</span>
-            </Label>
+          <div className="flex items-center justify-between gap-2 md:flex-shrink-0 md:justify-start">
+            <div className="flex items-center gap-2">
+              <FileCheck size="20px" aria-hidden="true" />
+              <Label htmlFor="onlyApprovedSwitch" className="text-md">
+                Apenas <span className="font-semibold">Aprovados</span>
+              </Label>
+            </div>
+            <div className="flex items-center">
+              <Switch
+                id="onlyApprovedSwitch"
+                checked={onlyApproved}
+                onCheckedChange={() => setOnlyApproved((v) => !v)}
+              />
+            </div>
           </div>
-          <Switch
-            id="onlyApprovedSwitch"
-            checked={onlyApproved}
-            onCheckedChange={() => setOnlyApproved((v) => !v)}
-          />
         </div>
 
         {/* Botão de pesquisa após todos os filtros */}
         <div className="mt-2 flex justify-start">
-          <Button onClick={handleSearch} className="w-full md:w-auto">
+          <Button
+            onClick={handleSearch}
+            className="w-full bg-green-500 hover:bg-green-800 md:w-auto"
+          >
             Pesquisar
           </Button>
         </div>
@@ -383,7 +396,7 @@ export default function SearchProjetoDeLei() {
           {/* Componente de Paginação */}
           {totalPages > 1 && (
             <Pagination className="mt-8">
-              <PaginationContent>
+              <PaginationContent className="flex flex-wrap gap-2">
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
