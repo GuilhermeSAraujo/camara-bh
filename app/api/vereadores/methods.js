@@ -19,11 +19,29 @@ export async function remove(_id) {
 export async function findById({ id }) {
   check(id, Match.Any);
 
-  const vereador = await VereadoresCollection.findOneAsync({
-    $or: [{ idVereador: id }, { _id: id }],
-  });
+  try {
+    let vereador = await VereadoresCollection.findOneAsync({ idVereador: id });
 
-  return vereador;
+    if (!vereador) {
+      vereador = await VereadoresCollection.findOneAsync({
+        $or: [
+          { _id: id }, // Para _id: "..."
+          { _id: { _str: id } }, // Para quando recebemos o _str diretamente
+          { _id: new Mongo.ObjectID(id) }, // Para quando precisamos converter para ObjectID
+        ],
+      });
+    }
+
+    if (!vereador) {
+      vereador = await VereadoresCollection.findOneAsync({
+        _id: new Mongo.ObjectID(id),
+      });
+    }
+
+    return vereador;
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function list() {
