@@ -48,3 +48,24 @@ export function getStatusColor(status) {
       return 'text-gray-600';
   }
 }
+
+export function getStatusColorHex(status) {
+  switch (status) {
+    case 'Lei':
+      return '#16a34a';
+    case 'Rejeitada':
+      return '#dc2626';
+    case 'Em redação final':
+      return '#2563eb';
+    case 'Primeiro turno':
+      return '#2563eb';
+    case 'Segundo turno':
+      return '#2563eb';
+    case 'Proposição de Lei':
+      return '#2563eb';
+    case 'Retirada':
+      return '#fcd34d';
+    default:
+      return '#4b5563';
+  }
+}
