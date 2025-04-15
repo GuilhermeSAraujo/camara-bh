@@ -27,3 +27,24 @@ export function getPartyColor(party) {
   }
   return '#808080';
 }
+
+export function getStatusColor(status) {
+  switch (status) {
+    case 'Lei':
+      return 'text-green-600';
+    case 'Rejeitada':
+      return 'text-red-600';
+    case 'Em redação final':
+      return 'text-blue-600';
+    case 'Primeiro turno':
+      return 'text-blue-600';
+    case 'Segundo turno':
+      return 'text-blue-600';
+    case 'Proposição de Lei':
+      return 'text-blue-600';
+    case 'Retirada':
+      return 'text-yellow-600';
+    default:
+      return 'text-gray-600';
+  }
+}

@@ -2,6 +2,7 @@ import { check, Match } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { VereadoresCollection } from '../vereadores';
 import { ProjetosDeLeiCollection, ProjetosDeLeiStatus } from './collection';
+import { Mongo } from 'meteor/mongo';
 
 const VEREADORES_CACHE = new Map();
 const PARTIES_CACHE = new Map();
@@ -190,9 +191,9 @@ async function search({ textSearch, sortOrder, vereadorId }) {
 
   const yearSort = sortOrder === 'Mais recentes' ? -1 : 1;
 
-  if (textSearch.trim() === '' && !vereadorId) {
-    return [];
-  }
+  // if (textSearch.trim() === '' && !vereadorId) {
+  //   return [];
+  // }
 
   const query = {
     ...(vereadorId ? { authorId: vereadorId } : {}),
@@ -218,36 +219,31 @@ async function search({ textSearch, sortOrder, vereadorId }) {
   return projetosDeLei;
 }
 
-async function porVereador({ id }) {
-  try {
-    if (!id) {
-      throw new Meteor.Error(
-        'invalid-parameters',
-        'ID do vereador não pode ser nulo'
-      );
-    }
-  
-    check(id, String);
-    
-    const query = {
-      $or: [
-        { authorId: new Mongo.ObjectID(id) },
-        { 'authorId._str': id },
-        { authorId: id }
-      ]
-    };
-  
-    return ProjetosDeLeiCollection.find(
-      query,
-      { sort: { year: -1 } }
-    ).fetchAsync();
-  
-  } catch (error) {
-    throw new Meteor.Error(
-      'projetos-de-lei.erro',
-      'Erro ao buscar projetos de lei do vereador'
-    );
-  }
+async function porVereador({ id, onlyApproved }) {
+  check(onlyApproved, Boolean);
+
+  const query = {
+    authorId: id,
+    ...(onlyApproved ? { status: ProjetosDeLeiStatus.LEI } : {}),
+  };
+
+  const projetosDeLei = await ProjetosDeLeiCollection.find(query, {
+    sort: { year: -1 },
+  }).fetchAsync();
+
+  const approvedProjetos = projetosDeLei.filter(
+    (projeto) => projeto.status === ProjetosDeLeiStatus.LEI
+  );
+
+  const allProjetosDeLeiCount = await ProjetosDeLeiCollection.find({
+    authorId: id,
+  }).countAsync();
+
+  return {
+    projetosDeLei,
+    aprovados: approvedProjetos?.length,
+    total: allProjetosDeLeiCount,
+  };
 }
 
 Meteor.methods({
@@ -255,4 +251,4 @@ Meteor.methods({
   'ProjetosDeLei.partidos': partidos,
   'ProjetosDeLei.search': search,
   'ProjetosDeLei.porVereador': porVereador,
-  });
+});

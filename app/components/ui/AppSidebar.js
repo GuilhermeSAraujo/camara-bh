@@ -43,26 +43,14 @@ const data = {
       ],
     },
     {
-      title: 'Building Your Application',
+      title: 'Vereador',
       url: '#',
-      ariaLabel: 'Menu de construção da aplicação',
+      ariaLabel: 'Vereador',
       items: [
         {
           title: 'Vereadores',
           url: RoutePaths.VEREADORES,
           ariaLabel: 'Ver informações sobre vereadores',
-        },
-      ],
-    },
-    {
-      title: 'API Reference',
-      url: '#',
-      ariaLabel: 'Menu de referência da API',
-      items: [
-        {
-          title: 'Components',
-          url: '#',
-          ariaLabel: 'Ver documentação de componentes',
         },
       ],
     },

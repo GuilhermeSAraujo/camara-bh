@@ -20,33 +20,12 @@ import {
 } from '../../components/ui/Select';
 import { Spinner } from '../../components/ui/Spinner';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
-
-function getStatusColor(status) {
-  switch (status) {
-    case 'Lei':
-      return 'text-green-600';
-    case 'Rejeitada':
-      return 'text-red-600';
-    case 'Em redação final':
-      return 'text-blue-600';
-    case 'Primeiro turno':
-      return 'text-blue-600';
-    case 'Segundo turno':
-      return 'text-blue-600';
-    case 'Proposição de Lei':
-      return 'text-blue-600';
-    case 'Retirada':
-      return 'text-yellow-600';
-    default:
-      return 'text-gray-600';
-  }
-}
+import { getStatusColor } from '../../lib/utils';
 
 export default function SearchProjetoDeLei() {
   const [textSearch, setTextSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('Mais recentes');
   const [vereadorId, setVereadorId] = useState(null);
-  const [partyId, setPartyId] = useState(null);
 
   const [chartTitle, setChartTitle] = useState('Projetos de Lei');
 
@@ -217,7 +196,8 @@ export default function SearchProjetoDeLei() {
           <div className="mt-4 text-center font-bold">{chartTitle}</div>
           <div className="mt-2 text-center">
             <p className="text-sm text-gray-600">
-              Resultados encontrados: {data?.length || 0}
+              Resultados encontrados:{' '}
+              <span className="font-bold">{data?.length || 0}</span>
             </p>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
