@@ -1,4 +1,4 @@
-import { Filter, SortAsc, Users } from 'lucide-react';
+import { FileCheck, Filter, SortAsc, Users } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import {
@@ -21,18 +21,35 @@ import {
 import { Spinner } from '../../components/ui/Spinner';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { getStatusColor } from '../../lib/utils';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationLink,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from '../../components/ui/Pagination';
+import { Switch } from '../../components/ui/Switch';
+import { useNavigate } from 'react-router-dom';
+import { Meteor } from 'meteor/meteor';
 
 export default function SearchProjetoDeLei() {
+  const navigate = useNavigate();
   const [textSearch, setTextSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('Mais recentes');
   const [vereadorId, setVereadorId] = useState(null);
-
   const [chartTitle, setChartTitle] = useState('Projetos de Lei');
+  const [onlyApproved, setOnlyApproved] = useState(false);
+
+  // Estados para paginação
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(9); // 9 cards por página (3x3 grid)
 
   const [data, { isLoading, refetch }] = useMethodWithState({
     method: 'ProjetosDeLei.search',
-    params: { textSearch, sortOrder, vereadorId },
-    dependencyArray: [sortOrder],
+    params: { textSearch, sortOrder, vereadorId, onlyApproved },
+    dependencyArray: [sortOrder, onlyApproved],
   });
 
   const [vereadoresSelect] = useMethodWithState({
@@ -43,7 +60,22 @@ export default function SearchProjetoDeLei() {
 
   useEffect(() => {
     getChartTitle();
+    // Reset para a primeira página quando os filtros mudam
+    setCurrentPage(1);
   }, [data]);
+
+  // Cálculos para paginação
+  const totalItems = data?.length || 0;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Obter os itens da página atual
+  const getCurrentPageItems = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return data?.slice(startIndex, endIndex) || [];
+  };
+
+  const paginatedData = getCurrentPageItems();
 
   function handleSortOrderChange(value) {
     if (value === sortOrder) {
@@ -64,6 +96,7 @@ export default function SearchProjetoDeLei() {
 
   async function handleSearch() {
     await refetch();
+    setCurrentPage(1); // Volta para a primeira página após uma nova pesquisa
   }
 
   function getChartTitle() {
@@ -77,7 +110,7 @@ export default function SearchProjetoDeLei() {
     let title = '';
     if (vereadorId) {
       const vereador = vereadoresSelect.find((v) => v._id === vereadorId);
-      title += `Projetos de Lei propostos por ${vereador.name}`;
+      title += `Projetos de Lei propostos por ${vereador?.name || ''}`;
     }
 
     if (textSearch) {
@@ -85,6 +118,10 @@ export default function SearchProjetoDeLei() {
         title += 'Projetos de Lei';
       }
       title += ` com as palavras-chave "${textSearch}"`;
+    }
+
+    if (!title) {
+      title = 'Projetos de Lei';
     }
 
     setChartTitle(title);
@@ -95,12 +132,101 @@ export default function SearchProjetoDeLei() {
       'https://www.cmbh.mg.gov.br/atividade-legislativa/pesquisar-proposicoes/projeto-de-lei';
 
     // Projeto de Lei - 123/2010
-    const number = projeto.title.split('- ')?.[1].split('/')?.[0].trim();
-    const year = projeto.title.split('/')?.[1].trim();
+    const number = projeto.title.split('- ')?.[1]?.split('/')?.[0]?.trim();
+    const year = projeto.title.split('/')?.[1]?.trim();
     const url = `${baseUrl}/${number}/${year}`;
 
     window.open(url, '_blank');
   }
+
+  async function handleClickVereador(e, projeto) {
+    e.stopPropagation();
+
+    const verador = await Meteor.callAsync('Vereadores.findById', {
+      id: projeto.authorId,
+    });
+
+    const vereadorNumber = verador.idVereador || verador._id;
+    navigate(`/vereador/${vereadorNumber}`);
+  }
+
+  // Função para gerar links de paginação
+  const generatePaginationItems = () => {
+    const items = [];
+
+    // Lógica para decidir quais números de página mostrar
+    let startPage = 1;
+    let endPage = totalPages;
+
+    if (totalPages > 7) {
+      // Se temos muitas páginas, mostramos um número limitado
+      if (currentPage <= 4) {
+        // Estamos no início
+        endPage = 5;
+      } else if (currentPage >= totalPages - 3) {
+        // Estamos no final
+        startPage = totalPages - 4;
+      } else {
+        // Estamos no meio
+        startPage = currentPage - 2;
+        endPage = currentPage + 2;
+      }
+    }
+
+    // Primeira página
+    if (startPage > 1) {
+      items.push(
+        <PaginationItem key="first">
+          <PaginationLink onClick={() => setCurrentPage(1)}>1</PaginationLink>
+        </PaginationItem>
+      );
+
+      // Adiciona reticências se necessário
+      if (startPage > 2) {
+        items.push(
+          <PaginationItem key="ellipsis-start">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
+      }
+    }
+
+    // Números de página
+    for (let i = startPage; i <= endPage; i++) {
+      items.push(
+        <PaginationItem key={i}>
+          <PaginationLink
+            isActive={currentPage === i}
+            onClick={() => setCurrentPage(i)}
+          >
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    // Última página
+    if (endPage < totalPages) {
+      // Adiciona reticências se necessário
+      if (endPage < totalPages - 1) {
+        items.push(
+          <PaginationItem key="ellipsis-end">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
+      }
+
+      items.push(
+        <PaginationItem key="last">
+          <PaginationLink onClick={() => setCurrentPage(totalPages)}>
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    return items;
+  };
 
   return (
     <div className="container mx-auto p-4 md:max-w-7xl">
@@ -176,6 +302,21 @@ export default function SearchProjetoDeLei() {
           </Select>
         </div>
 
+        {/* Filtro de aprovados */}
+        <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
+          <div className="flex items-center gap-2 md:flex-shrink-0">
+            <FileCheck size="20px" aria-hidden="true" />
+            <Label htmlFor="onlyApprovedSwitch" className="text-md">
+              Apenas <span className="font-semibold">Aprovados</span>
+            </Label>
+          </div>
+          <Switch
+            id="onlyApprovedSwitch"
+            checked={onlyApproved}
+            onCheckedChange={() => setOnlyApproved((v) => !v)}
+          />
+        </div>
+
         {/* Botão de pesquisa após todos os filtros */}
         <div className="mt-2 flex justify-start">
           <Button onClick={handleSearch} className="w-full md:w-auto">
@@ -197,11 +338,17 @@ export default function SearchProjetoDeLei() {
           <div className="mt-2 text-center">
             <p className="text-sm text-gray-600">
               Resultados encontrados:{' '}
-              <span className="font-bold">{data?.length || 0}</span>
+              <span className="font-bold">{totalItems}</span>
+              {totalItems > 0 && (
+                <span className="ml-2">
+                  (Exibindo {(currentPage - 1) * itemsPerPage + 1} -{' '}
+                  {Math.min(currentPage * itemsPerPage, totalItems)})
+                </span>
+              )}
             </p>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-            {data?.map((projeto) => (
+            {paginatedData.map((projeto) => (
               <Card
                 key={projeto._id}
                 className="flex h-full flex-col hover:cursor-pointer"
@@ -209,7 +356,12 @@ export default function SearchProjetoDeLei() {
               >
                 <CardHeader>
                   <CardTitle className="text-xl">{projeto.title}</CardTitle>
-                  <CardDescription>{projeto.author}</CardDescription>
+                  <CardDescription
+                    className="hover:underline"
+                    onClick={(e) => handleClickVereador(e, projeto)}
+                  >
+                    {projeto.author}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
                   <p>{projeto.summary}</p>
@@ -227,6 +379,39 @@ export default function SearchProjetoDeLei() {
               </Card>
             ))}
           </div>
+
+          {/* Componente de Paginação */}
+          {totalPages > 1 && (
+            <Pagination className="mt-8">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    aria-disabled={currentPage === 1}
+                    className={
+                      currentPage === 1 ? 'pointer-events-none opacity-50' : ''
+                    }
+                  />
+                </PaginationItem>
+
+                {generatePaginationItems()}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() =>
+                      setCurrentPage(Math.min(totalPages, currentPage + 1))
+                    }
+                    aria-disabled={currentPage === totalPages}
+                    className={
+                      currentPage === totalPages
+                        ? 'pointer-events-none opacity-50'
+                        : ''
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )}
         </div>
       )}
     </div>

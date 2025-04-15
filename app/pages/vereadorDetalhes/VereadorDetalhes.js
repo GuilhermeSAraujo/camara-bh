@@ -53,7 +53,7 @@ export function VereadorDetalhes() {
   };
 
   const [vereador, { isLoading: isLoadingVereador }] = useMethodWithState({
-    method: 'Vereadores.find',
+    method: 'Vereadores.findById',
     params: { id: idVereador },
     dependencyArray: [idVereador],
   });
