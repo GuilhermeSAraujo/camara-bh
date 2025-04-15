@@ -182,7 +182,7 @@ export function VereadorDetalhes() {
                   </button>
                 </span>
               ) : (
-                <span className="ml-2 text-sm font-normal text-gray-500 underline">
+                <span className="ml-2 text-sm font-bold font-normal text-gray-500 underline">
                   Clique no Gráfico para Filtrar
                 </span>
               )}
@@ -290,13 +290,20 @@ export function VereadorDetalhes() {
                 <div className="flex gap-3">
                   <span
                     onClick={() => handleOnlyApprovedFilter(false)}
-                    className={`cursor-pointer rounded-full px-4 py-1 text-sm font-medium md:px-3 ${
-                      onlyApproved === false
-                        ? 'bg-blue-600 text-white ring-2 ring-blue-300'
-                        : 'bg-blue-100 text-blue-800'
-                    }`}
+                    className={`cursor-pointer rounded-full px-4 py-1 text-sm font-medium transition-all md:px-3`}
+                    style={{
+                      backgroundColor: selectedStatus
+                        ? `${getStatusColorHex(selectedStatus)}33`
+                        : 'rgb(219 234 254)',
+                      color: selectedStatus
+                        ? getStatusColorHex(selectedStatus)
+                        : 'rgb(30 64 175)',
+                      ...(onlyApproved === false && {
+                        boxShadow: `0 0 0 2px ${selectedStatus ? getStatusColorHex(selectedStatus) : 'rgb(147 197 253)'}`,
+                      }),
+                    }}
                   >
-                    Total: {data?.total || 0}
+                    Total: {filteredProjetos?.length || 0}
                   </span>
                 </div>
               </div>
