@@ -1,4 +1,4 @@
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { VereadoresCollection } from './collection';
 
@@ -17,7 +17,7 @@ export async function remove(_id) {
 }
 
 export async function findById({ id }) {
-  check(id, String);
+  check(id, Match.Any);
 
   const vereador = await VereadoresCollection.findOneAsync({
     $or: [{ idVereador: id }, { _id: id }],
@@ -27,7 +27,10 @@ export async function findById({ id }) {
 }
 
 export async function list() {
-  const result = await VereadoresCollection.find({}).fetchAsync();
+  const result = await VereadoresCollection.find(
+    {},
+    { sort: { name: 1 } }
+  ).fetchAsync();
   return result;
 }
 
@@ -35,6 +38,6 @@ Meteor.methods({
   'Vereadores.create': create,
   'Vereadores.update': update,
   'Vereadores.remove': remove,
-  'Vereadores.find': findById,
+  'Vereadores.findById': findById,
   'Vereadores.list': list,
 });

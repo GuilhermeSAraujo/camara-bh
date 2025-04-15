@@ -184,19 +184,17 @@ async function partidos({ mandato, onlyApproved }) {
   return parties;
 }
 
-async function search({ textSearch, sortOrder, vereadorId }) {
+async function search({ textSearch, sortOrder, vereadorId, onlyApproved }) {
   check(textSearch, Match.Optional(String));
   check(sortOrder, String);
   check(vereadorId, Match.Any); // ObjectId || null
+  check(onlyApproved, Boolean);
 
   const yearSort = sortOrder === 'Mais recentes' ? -1 : 1;
 
-  // if (textSearch.trim() === '' && !vereadorId) {
-  //   return [];
-  // }
-
   const query = {
     ...(vereadorId ? { authorId: vereadorId } : {}),
+    ...(onlyApproved ? { status: ProjetosDeLeiStatus.LEI } : {}),
   };
 
   if (textSearch.trim() !== '') {
