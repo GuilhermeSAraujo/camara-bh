@@ -1,15 +1,24 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { VereadoresCollection } from '../../api/vereadores/collection';
 
 export default function Vereadores() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedParty, setSelectedParty] = useState('');
+  const [selectedParty, setSelectedParty] = useState(
+    location.state?.selectedParty || ''
+  );
 
   const DEFAULT_AVATAR =
     'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+
+  useEffect(() => {
+    if (location.state?.selectedParty) {
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const removeAccents = (str) =>
     str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');

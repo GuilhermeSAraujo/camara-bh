@@ -198,7 +198,7 @@ export function VereadorDetalhes() {
                       className="focus:outline-none"
                       isAnimationActive={true}
                       animationBegin={0}
-                      animationDuration={400}
+                      animationDuration={1000}
                       onClick={handlePieClick}
                       cursor="pointer"
                     >

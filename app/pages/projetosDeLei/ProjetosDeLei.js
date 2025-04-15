@@ -1,5 +1,6 @@
 import { FileCheck, Filter } from 'lucide-react';
 import React, { Suspense, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Label } from '../../components/ui/Label';
 import {
   Select,
@@ -31,6 +32,7 @@ const ProjetosDeLeiList = React.lazy(
 const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 
 export default function ProjetosDeLei() {
+  const navigate = useNavigate();
   const [mandato, setMandato] = useState('2021;2024');
   const [onlyApproved, setOnlyApproved] = useState(false);
 
@@ -40,11 +42,23 @@ export default function ProjetosDeLei() {
     dependencyArray: [mandato, onlyApproved],
   });
 
-  console.log(data);
-  
   function handleChangeMandato(value) {
     if (value === mandato) return;
     setMandato(value);
+  }
+
+  async function handleClickVereador(e, authorId) {
+    e.stopPropagation();
+    try {
+      const vereador = await Meteor.callAsync('Vereadores.findById', {
+        id: authorId,
+      });
+      const vereadorId =
+        vereador.idVereador || vereador._id?._str || vereador._id;
+      navigate(`/vereador/${vereadorId}`);
+    } catch (error) {
+      console.error('Erro ao buscar vereador:', error);
+    }
   }
 
   return (
@@ -129,6 +143,7 @@ export default function ProjetosDeLei() {
             data={data}
             mandato={mandato}
             onlyApproved={onlyApproved}
+            onClickVereador={handleClickVereador}
           />
         </Suspense>
       ) : (

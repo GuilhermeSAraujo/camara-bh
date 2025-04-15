@@ -1,5 +1,6 @@
 import { FileCheck, Filter } from 'lucide-react';
 import { default as React, Suspense, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from 'recharts';
 import {
   ChartContainer,
@@ -36,6 +37,7 @@ const chartConfig = {
 };
 
 export default function ProjetosDeLeiPartidos() {
+  const navigate = useNavigate();
   const [onlyApproved, setOnlyApproved] = useState(false);
   const [mandato, setMandato] = useState('2021;2024');
 
@@ -50,9 +52,12 @@ export default function ProjetosDeLeiPartidos() {
     setMandato(value);
   }
 
+  const handlePartyClick = (party) => {
+    navigate('/vereadores', { state: { selectedParty: party } });
+  };
+
   const projetosDeLeiQuantity = data?.reduce((acc, item) => {
     acc += item.value;
-
     return acc;
   }, 0);
 
@@ -128,14 +133,39 @@ export default function ProjetosDeLeiPartidos() {
             <div className="mt-10 gap-4 overflow-x-auto">
               <div className="min-w-[800px]">
                 <ChartContainer config={chartConfig} className="w-full">
-                  <BarChart accessibilityLayer data={data}>
+                  <BarChart
+                    accessibilityLayer
+                    data={data}
+                    margin={{ bottom: 60 }}
+                  >
                     <CartesianGrid vertical={false} />
                     <XAxis
                       dataKey="party"
                       tickLine={false}
-                      tickMargin={1}
+                      tickMargin={10}
                       axisLine={false}
-                      tickFormatter={(value) => value.slice(0, 5)}
+                      height={60}
+                      interval={0}
+                      tick={(props) => {
+                        const { x, y, payload } = props;
+                        return (
+                          <g transform={`translate(${x},${y})`}>
+                            <text
+                              x={0}
+                              y={0}
+                              dy={5}
+                              textAnchor="end"
+                              fill="#2563eb"
+                              className="cursor-pointer text-sm transition-all hover:fill-blue-800 hover:underline"
+                              transform="rotate(-45)"
+                              onClick={() => handlePartyClick(payload.value)}
+                              title={`Clique para ver vereadores do ${payload.value}`}
+                            >
+                              {payload.value}
+                            </text>
+                          </g>
+                        );
+                      }}
                     />
                     <YAxis
                       type="number"

@@ -52,20 +52,20 @@ export function getStatusColor(status) {
 export function getStatusColorHex(status) {
   switch (status) {
     case 'Lei':
-      return '#16a34a';
+      return '#16a34a'; // verde
     case 'Rejeitada':
-      return '#dc2626';
+      return '#dc2626'; // vermelho
     case 'Em redação final':
-      return '#2563eb';
+      return '#2563eb'; // azul-600
     case 'Primeiro turno':
-      return '#2563eb';
+      return '#3b82f6'; // azul-500
     case 'Segundo turno':
-      return '#2563eb';
+      return '#60a5fa'; // azul-400
     case 'Proposição de Lei':
-      return '#2563eb';
+      return '#93c5fd'; // azul-300
     case 'Retirada':
-      return '#fcd34d';
+      return '#fcd34d'; // amarelo
     default:
-      return '#4b5563';
+      return '#4b5563'; // cinza
   }
 }
