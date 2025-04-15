@@ -88,7 +88,28 @@ export function VereadorDetalhes() {
     setOnlyApproved(filter);
   }
 
-  if (!vereador) return <div>Vereador não encontrado</div>;
+  if (isLoadingVereador) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Spinner size="large" role="status" aria-live="polite" />
+      </div>
+    );
+  }
+
+  if (!vereador) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="rounded-lg bg-white p-8 text-center shadow-lg">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Vereador não encontrado
+          </h2>
+          <p className="mt-2 text-gray-600">
+            Não foi possível encontrar o vereador solicitado.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const lastMandate = vereador.mandates?.[vereador.mandates.length - 1];
   const imageUrl = findFirstAvailableImage(vereador.mandates);
