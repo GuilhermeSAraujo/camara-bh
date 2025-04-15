@@ -170,15 +170,20 @@ export function VereadorDetalhes() {
           <div className="mb-6 rounded-lg bg-white p-6 shadow">
             <h2 className="mb-4 text-xl font-bold">
               Distribuição dos Projetos por Status
-              {selectedStatus && (
+              {selectedStatus ? (
                 <span className="ml-2 text-sm font-normal text-gray-500">
-                  (Filtrado por: {selectedStatus})
+                  (Filtrado por:{' '}
+                  <span className="font-bold">{selectedStatus}</span>)
                   <button
                     onClick={() => setSelectedStatus(null)}
                     className="ml-2 text-blue-600 hover:underline"
                   >
                     Limpar filtro
                   </button>
+                </span>
+              ) : (
+                <span className="ml-2 text-sm font-normal text-gray-500 underline">
+                  Clique no Gráfico para Filtrar
                 </span>
               )}
             </h2>
