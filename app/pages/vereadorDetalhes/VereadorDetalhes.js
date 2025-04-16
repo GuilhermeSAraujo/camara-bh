@@ -144,8 +144,9 @@ export function VereadorDetalhes() {
                 {lastMandate?.startYear} - {lastMandate?.endYear}
               </span>
             </p>
-            <p className="text-sm font-semibold text-gray-500">
-              {lastMandate?.party}
+            <p className="text-gray-600">
+              Último partido:{' '}
+              <span className="font-semibold">{lastMandate?.party}</span>
             </p>
           </div>
         </div>
