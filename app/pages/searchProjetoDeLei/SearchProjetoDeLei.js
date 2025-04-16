@@ -140,14 +140,20 @@ export default function SearchProjetoDeLei() {
   }
 
   async function handleClickVereador(e, projeto) {
+    e.preventDefault();
     e.stopPropagation();
 
-    const verador = await Meteor.callAsync('Vereadores.findById', {
-      id: projeto.authorId,
+    const authorId = projeto.authorId._str || projeto.authorId;
+
+    const vereador = await Meteor.callAsync('Vereadores.findById', {
+      id: authorId,
     });
 
-    const vereadorNumber = verador.idVereador || verador._id;
-    navigate(`/vereador/${vereadorNumber}`);
+    if (vereador) {
+      const vereadorId =
+        vereador.idVereador || vereador._id?._str || vereador._id;
+      navigate(`/vereador/${vereadorId}`);
+    }
   }
 
   // Função para gerar links de paginação
@@ -370,7 +376,7 @@ export default function SearchProjetoDeLei() {
                 <CardHeader>
                   <CardTitle className="text-xl">{projeto.title}</CardTitle>
                   <CardDescription
-                    className="hover:underline"
+                    className="cursor-pointer hover:underline"
                     onClick={(e) => handleClickVereador(e, projeto)}
                   >
                     {projeto.author}

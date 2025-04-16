@@ -57,6 +57,7 @@ export function VereadorDetalhes() {
     params: { id: idVereador },
     dependencyArray: [idVereador],
   });
+  console.log(vereador);
 
   const [data, { isLoading: isLoadingLeis }] = useMethodWithState({
     method: 'ProjetosDeLei.porVereador',
@@ -118,7 +119,9 @@ export function VereadorDetalhes() {
     <div className="container mx-auto p-4 md:max-w-7xl">
       <main className="flex-1 bg-gray-100">
         {/* Cabeçalho */}
-        <div className="mb-6 flex items-center">
+        <div className="mb-6 mt-6 flex items-start p-4">
+          {' '}
+          {/* Alteramos aqui */}
           <img
             src={imageUrl}
             alt={vereador.name}
@@ -128,7 +131,13 @@ export function VereadorDetalhes() {
             }}
           />
           <div>
-            <h1 className="text-3xl font-bold">{vereador.fullName}</h1>
+            <h1 className="text-3xl font-bold">{vereador.name}</h1>
+            {vereador.name !== vereador.fullName && (
+              <p className="mt-1 text-gray-600">
+                Nome civil:{' '}
+                <span className="font-medium">{vereador.fullName}</span>
+              </p>
+            )}
             <p className="mt-2 text-gray-600">
               Mandato mais recente:{' '}
               <span className="font-semibold">
