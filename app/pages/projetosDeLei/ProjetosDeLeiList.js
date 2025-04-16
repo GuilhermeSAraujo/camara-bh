@@ -27,7 +27,9 @@ export default function ProjetosDeLeiList({
       {data.map((item) => (
         <React.Fragment key={item.author}>
           <button
-            onClick={(e) => onClickVereador(e, item.authorId)}
+            onClick={(e) =>
+              onClickVereador(e, item.authorId?._str || item.authorId)
+            }
             className="col-span-2 text-left hover:text-blue-600 hover:underline md:col-span-1"
           >
             {item.author}
