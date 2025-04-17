@@ -62,18 +62,18 @@ function Vereadores() {
     const normalizedSearchTerm = removeAccents(searchTerm.toLowerCase());
 
     return vereadores.filter((vereador) => {
+      const lastMandate = vereador.mandates?.[vereador.mandates.length - 1];
+
       const normalizedName = removeAccents(vereador.name.toLowerCase());
       const normalizedFullName = removeAccents(vereador.fullName.toLowerCase());
 
       const matchesSearch =
         searchTerm === '' ||
         normalizedName.includes(normalizedSearchTerm) ||
-        normalizedFullName.includes(normalizedSearchTerm) ||
-        vereador.names.includes(normalizedSearchTerm);
+        normalizedFullName.includes(normalizedSearchTerm);
 
       const matchesParty =
-        selectedParty === '' ||
-        vereador.mandates?.some((m) => m.party === selectedParty);
+        selectedParty === '' || lastMandate?.party === selectedParty;
 
       return matchesSearch && matchesParty;
     });

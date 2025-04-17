@@ -21,7 +21,7 @@ const data = {
   navMain: [
     {
       title: 'Projetos de Lei',
-      url: '#',
+      url: RoutePaths.BUSCAR,
       ariaLabel: 'Menu de projetos de lei',
       items: [
         {
@@ -43,7 +43,7 @@ const data = {
     },
     {
       title: 'Vereador',
-      url: '#',
+      url: RoutePaths.VEREADORES,
       ariaLabel: 'Vereador',
       items: [
         {
