@@ -10,8 +10,9 @@ import {
   CardTitle,
 } from '../../components/ui/Card';
 import { RoutePaths } from '../../general/RoutePaths';
+import { withTextToSpeech } from '../../components/TextToSpeech';
 
-export default function Home() {
+function Home() {
   const navigate = useNavigate();
 
   const { setOpen } = useSidebar();
@@ -128,3 +129,5 @@ function CardItem({ title, description, icon, bgColor }) {
     </Card>
   );
 }
+
+export default withTextToSpeech(Home);
