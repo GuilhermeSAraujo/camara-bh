@@ -1,5 +1,7 @@
 import { FileCheck, Filter, SortAsc, Users } from 'lucide-react';
+import { Meteor } from 'meteor/meteor';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
 import {
   Card,
@@ -12,6 +14,16 @@ import {
 import { Input } from '../../components/ui/Input';
 import { Label } from '../../components/ui/Label';
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '../../components/ui/Pagination';
+import { ReturnButton } from '../../components/ui/ReturnButton';
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -19,20 +31,9 @@ import {
   SelectValue,
 } from '../../components/ui/Select';
 import { Spinner } from '../../components/ui/Spinner';
+import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { getStatusColor } from '../../lib/utils';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationLink,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-  PaginationEllipsis,
-} from '../../components/ui/Pagination';
-import { Switch } from '../../components/ui/Switch';
-import { useNavigate } from 'react-router-dom';
-import { Meteor } from 'meteor/meteor';
 
 export default function SearchProjetoDeLei() {
   const navigate = useNavigate();
@@ -235,204 +236,213 @@ export default function SearchProjetoDeLei() {
   };
 
   return (
-    <div className="container mx-auto max-w-sm p-4 md:max-w-7xl">
-      <div className="self-center">
-        <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
-          Busque por <span className="underline">Projetos de Lei</span>
-        </h2>
+    <div>
+      <div className="m-4">
+        <ReturnButton />
       </div>
-
-      {/* Filtros */}
-      <div className="mt-10 grid grid-cols-1 gap-4">
-        {/* Filtro de pesquisa por palavras-chave */}
-        <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
-          {/* Label - em linha completa no mobile, inline no desktop */}
-          <div className="flex items-center gap-2 md:flex-shrink-0">
-            <Filter size="20px" aria-hidden="true" />
-            <Label className="text-md whitespace-nowrap">
-              Pesquise por palavras-chave
-            </Label>
-          </div>
-
-          {/* Input de pesquisa */}
-          <Input
-            value={textSearch}
-            onChange={(e) => setTextSearch(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSearch();
-              }
-            }}
-            type="text"
-            className="w-full md:max-w-xs md:flex-grow"
-            placeholder="Animais | Saúde | Educação | Esporte"
-          />
+      <div className="container mx-auto max-w-sm p-4 md:max-w-7xl">
+        <div className="self-center">
+          <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
+            Busque por <span className="underline">Projetos de Lei</span>
+          </h2>
         </div>
 
-        {/* Filtro de vereadores */}
-        <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
-          <div className="flex items-center gap-2 md:flex-shrink-0">
-            <Users size="20px" aria-hidden="true" />
-            <Label className="text-md whitespace-nowrap">
-              Filtrar por Vereador(a)
-            </Label>
-          </div>
-
-          <Select
-            value={vereadorId || 'all'}
-            onValueChange={handleSortVereadorChange}
-          >
-            <SelectTrigger className="w-full md:max-w-xs">
-              <SelectValue placeholder="Selecione o Vereador(a)" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos os vereadores</SelectItem>
-              {vereadoresSelect?.map((v) => (
-                <SelectItem key={v._id} value={v._id}>
-                  {v.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Filtro de ordenação */}
-        <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
-          <div className="flex items-center gap-2 md:flex-shrink-0">
-            <SortAsc size="20px" aria-hidden="true" />
-            <Label className="text-md whitespace-nowrap">Ordenar por</Label>
-          </div>
-
-          <Select value={sortOrder} onValueChange={handleSortOrderChange}>
-            <SelectTrigger className="w-full md:max-w-xs">
-              <SelectValue placeholder="Selecione a ordenação" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Mais recentes">Mais recentes</SelectItem>
-              <SelectItem value="Mais antigos">Mais antigos</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Filtro de aprovados */}
-        <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
-          <div className="flex items-center justify-between gap-2 md:flex-shrink-0 md:justify-start">
-            <div className="flex items-center gap-2">
-              <FileCheck size="20px" aria-hidden="true" />
-              <Label htmlFor="onlyApprovedSwitch" className="text-md">
-                Apenas <span className="font-semibold">Aprovados</span>
+        {/* Filtros */}
+        <div className="mt-10 grid grid-cols-1 gap-4">
+          {/* Filtro de pesquisa por palavras-chave */}
+          <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
+            {/* Label - em linha completa no mobile, inline no desktop */}
+            <div className="flex items-center gap-2 md:flex-shrink-0">
+              <Filter size="20px" aria-hidden="true" />
+              <Label className="text-md whitespace-nowrap">
+                Pesquise por palavras-chave
               </Label>
             </div>
-            <div className="flex items-center">
-              <Switch
-                id="onlyApprovedSwitch"
-                checked={onlyApproved}
-                onCheckedChange={() => setOnlyApproved((v) => !v)}
-              />
+
+            {/* Input de pesquisa */}
+            <Input
+              value={textSearch}
+              onChange={(e) => setTextSearch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                }
+              }}
+              type="text"
+              className="w-full md:max-w-xs md:flex-grow"
+              placeholder="Animais | Saúde | Educação | Esporte"
+            />
+          </div>
+
+          {/* Filtro de vereadores */}
+          <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
+            <div className="flex items-center gap-2 md:flex-shrink-0">
+              <Users size="20px" aria-hidden="true" />
+              <Label className="text-md whitespace-nowrap">
+                Filtrar por Vereador(a)
+              </Label>
+            </div>
+
+            <Select
+              value={vereadorId || 'all'}
+              onValueChange={handleSortVereadorChange}
+            >
+              <SelectTrigger className="w-full md:max-w-xs">
+                <SelectValue placeholder="Selecione o Vereador(a)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os vereadores</SelectItem>
+                {vereadoresSelect?.map((v) => (
+                  <SelectItem key={v._id} value={v._id}>
+                    {v.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Filtro de ordenação */}
+          <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
+            <div className="flex items-center gap-2 md:flex-shrink-0">
+              <SortAsc size="20px" aria-hidden="true" />
+              <Label className="text-md whitespace-nowrap">Ordenar por</Label>
+            </div>
+
+            <Select value={sortOrder} onValueChange={handleSortOrderChange}>
+              <SelectTrigger className="w-full md:max-w-xs">
+                <SelectValue placeholder="Selecione a ordenação" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Mais recentes">Mais recentes</SelectItem>
+                <SelectItem value="Mais antigos">Mais antigos</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Filtro de aprovados */}
+          <div className="grid grid-cols-1 gap-2 md:flex md:max-w-2xl md:items-center md:gap-3">
+            <div className="flex items-center justify-between gap-2 md:flex-shrink-0 md:justify-start">
+              <div className="flex items-center gap-2">
+                <FileCheck size="20px" aria-hidden="true" />
+                <Label htmlFor="onlyApprovedSwitch" className="text-md">
+                  Apenas <span className="font-semibold">Aprovados</span>
+                </Label>
+              </div>
+              <div className="flex items-center">
+                <Switch
+                  id="onlyApprovedSwitch"
+                  checked={onlyApproved}
+                  onCheckedChange={() => setOnlyApproved((v) => !v)}
+                />
+              </div>
             </div>
           </div>
+
+          {/* Botão de pesquisa após todos os filtros */}
+          <div className="mt-2 flex justify-start">
+            <Button
+              onClick={handleSearch}
+              className="w-full bg-green-500 hover:bg-green-800 md:w-auto"
+            >
+              Pesquisar
+            </Button>
+          </div>
         </div>
 
-        {/* Botão de pesquisa após todos os filtros */}
-        <div className="mt-2 flex justify-start">
-          <Button
-            onClick={handleSearch}
-            className="w-full bg-green-500 hover:bg-green-800 md:w-auto"
-          >
-            Pesquisar
-          </Button>
-        </div>
+        {isLoading ? (
+          <Spinner
+            className="mt-12"
+            size="large"
+            role="status"
+            aria-live="polite"
+          />
+        ) : (
+          <div>
+            <div className="mt-4 text-center font-bold">{chartTitle}</div>
+            <div className="mt-2 text-center">
+              <p className="text-sm text-gray-600">
+                Resultados encontrados:{' '}
+                <span className="font-bold">{totalItems}</span>
+                {totalItems > 0 && (
+                  <span className="ml-2">
+                    (Exibindo {(currentPage - 1) * itemsPerPage + 1} -{' '}
+                    {Math.min(currentPage * itemsPerPage, totalItems)})
+                  </span>
+                )}
+              </p>
+            </div>
+            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+              {paginatedData.map((projeto) => (
+                <Card
+                  key={projeto._id}
+                  className="flex h-full flex-col hover:cursor-pointer"
+                  onClick={() => handleClickProjeto(projeto)}
+                >
+                  <CardHeader>
+                    <CardTitle className="text-xl">{projeto.title}</CardTitle>
+                    <CardDescription
+                      className="cursor-pointer hover:underline"
+                      onClick={(e) => handleClickVereador(e, projeto)}
+                    >
+                      {projeto.author}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <p>{projeto.summary}</p>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <span className="text-sm text-gray-600">
+                      Ano: {projeto.year}
+                    </span>
+                    <span
+                      className={`font-medium ${getStatusColor(projeto.status)}`}
+                    >
+                      {projeto.status}
+                    </span>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+
+            {/* Componente de Paginação */}
+            {totalPages > 1 && (
+              <Pagination className="mt-8">
+                <PaginationContent className="flex flex-wrap gap-2">
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() =>
+                        setCurrentPage(Math.max(1, currentPage - 1))
+                      }
+                      aria-disabled={currentPage === 1}
+                      className={
+                        currentPage === 1
+                          ? 'pointer-events-none opacity-50'
+                          : ''
+                      }
+                    />
+                  </PaginationItem>
+
+                  {generatePaginationItems()}
+
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() =>
+                        setCurrentPage(Math.min(totalPages, currentPage + 1))
+                      }
+                      aria-disabled={currentPage === totalPages}
+                      className={
+                        currentPage === totalPages
+                          ? 'pointer-events-none opacity-50'
+                          : ''
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
+          </div>
+        )}
       </div>
-
-      {isLoading ? (
-        <Spinner
-          className="mt-12"
-          size="large"
-          role="status"
-          aria-live="polite"
-        />
-      ) : (
-        <div>
-          <div className="mt-4 text-center font-bold">{chartTitle}</div>
-          <div className="mt-2 text-center">
-            <p className="text-sm text-gray-600">
-              Resultados encontrados:{' '}
-              <span className="font-bold">{totalItems}</span>
-              {totalItems > 0 && (
-                <span className="ml-2">
-                  (Exibindo {(currentPage - 1) * itemsPerPage + 1} -{' '}
-                  {Math.min(currentPage * itemsPerPage, totalItems)})
-                </span>
-              )}
-            </p>
-          </div>
-          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-            {paginatedData.map((projeto) => (
-              <Card
-                key={projeto._id}
-                className="flex h-full flex-col hover:cursor-pointer"
-                onClick={() => handleClickProjeto(projeto)}
-              >
-                <CardHeader>
-                  <CardTitle className="text-xl">{projeto.title}</CardTitle>
-                  <CardDescription
-                    className="cursor-pointer hover:underline"
-                    onClick={(e) => handleClickVereador(e, projeto)}
-                  >
-                    {projeto.author}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <p>{projeto.summary}</p>
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                  <span className="text-sm text-gray-600">
-                    Ano: {projeto.year}
-                  </span>
-                  <span
-                    className={`font-medium ${getStatusColor(projeto.status)}`}
-                  >
-                    {projeto.status}
-                  </span>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-
-          {/* Componente de Paginação */}
-          {totalPages > 1 && (
-            <Pagination className="mt-8">
-              <PaginationContent className="flex flex-wrap gap-2">
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                    aria-disabled={currentPage === 1}
-                    className={
-                      currentPage === 1 ? 'pointer-events-none opacity-50' : ''
-                    }
-                  />
-                </PaginationItem>
-
-                {generatePaginationItems()}
-
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() =>
-                      setCurrentPage(Math.min(totalPages, currentPage + 1))
-                    }
-                    aria-disabled={currentPage === totalPages}
-                    className={
-                      currentPage === totalPages
-                        ? 'pointer-events-none opacity-50'
-                        : ''
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          )}
-        </div>
-      )}
     </div>
   );
 }

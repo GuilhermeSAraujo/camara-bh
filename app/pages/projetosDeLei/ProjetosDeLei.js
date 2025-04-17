@@ -1,6 +1,7 @@
-import { FileCheck, Filter } from 'lucide-react';
+import { ArrowLeft, FileCheck, Filter } from 'lucide-react';
 import React, { Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '../../components/ui/Button';
 import { Label } from '../../components/ui/Label';
 import {
   Select,
@@ -14,6 +15,8 @@ import {
 import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
+import { Meteor } from 'meteor/meteor';
+import { ReturnButton } from '../../components/ui/ReturnButton';
 
 const ChartDetailsModal = React.lazy(
   () => import('../../components/ui/ChartDetailsModal')
@@ -62,50 +65,77 @@ export default function ProjetosDeLei() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:max-w-7xl">
-      <div className="self-center">
-        <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
-          <span className="underline">Projetos de Lei</span> propostos e
-          aprovados por <span className="underline">Vereador</span>
-        </h2>
+    <div>
+      <div className="m-4">
+        <ReturnButton />
       </div>
+      <div className="container mx-auto p-4 md:max-w-7xl">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
+            <span className="underline">Projetos de Lei</span> propostos e
+            aprovados por <span className="underline">Vereador</span>
+          </h2>
+        </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-6">
-        <div className="flex items-center">
-          <Filter size="20px" aria-hidden="true" />
-          <Label className="text-md px-3">Selecione o mandato</Label>
-          <Select
-            value={mandato}
-            onValueChange={handleChangeMandato}
-            aria-label="Selecione o mandato"
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Selecione o mandato desejado" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Mandatos</SelectLabel>
-                {filterOptions.map((year) => (
-                  <SelectItem key={year} value={year}>
-                    {year.replace(';', ' - ')}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+        <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-6">
+          <div className="flex items-center">
+            <Filter size="20px" aria-hidden="true" />
+            <Label className="text-md px-3">Selecione o mandato</Label>
+            <Select
+              value={mandato}
+              onValueChange={handleChangeMandato}
+              aria-label="Selecione o mandato"
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Selecione o mandato desejado" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Mandatos</SelectLabel>
+                  {filterOptions.map((year) => (
+                    <SelectItem key={year} value={year}>
+                      {year.replace(';', ' - ')}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center">
+            <FileCheck size="20px" aria-hidden="true" />
+            <Label htmlFor="onlyApprovedSwitch" className="text-md px-3">
+              Apenas <span className="font-semibold">Aprovados</span>
+            </Label>
+            <Switch
+              id="onlyApprovedSwitch"
+              checked={onlyApproved}
+              onCheckedChange={() => setOnlyApproved((v) => !v)}
+            />
+          </div>
+          <div className="flex justify-start">
+            <Suspense
+              fallback={
+                <Spinner
+                  className="mt-12"
+                  size="large"
+                  role="status"
+                  aria-live="polite"
+                />
+              }
+            >
+              <ChartDetailsModal />
+            </Suspense>
+          </div>
         </div>
-        <div className="flex items-center">
-          <FileCheck size="20px" aria-hidden="true" />
-          <Label htmlFor="onlyApprovedSwitch" className="text-md px-3">
-            Apenas <span className="font-semibold">Aprovados</span>
-          </Label>
-          <Switch
-            id="onlyApprovedSwitch"
-            checked={onlyApproved}
-            onCheckedChange={() => setOnlyApproved((v) => !v)}
+
+        {isLoading ? (
+          <Spinner
+            className="mt-12"
+            size="large"
+            role="status"
+            aria-live="polite"
           />
-        </div>
-        <div className="flex justify-start">
+        ) : data?.length > 0 ? (
           <Suspense
             fallback={
               <Spinner
@@ -116,43 +146,21 @@ export default function ProjetosDeLei() {
               />
             }
           >
-            <ChartDetailsModal />
-          </Suspense>
-        </div>
-      </div>
-
-      {isLoading ? (
-        <Spinner
-          className="mt-12"
-          size="large"
-          role="status"
-          aria-live="polite"
-        />
-      ) : data?.length > 0 ? (
-        <Suspense
-          fallback={
-            <Spinner
-              className="mt-12"
-              size="large"
-              role="status"
-              aria-live="polite"
+            <ProjetosDeLeiList
+              data={data}
+              mandato={mandato}
+              onlyApproved={onlyApproved}
+              onClickVereador={handleClickVereador}
             />
-          }
-        >
-          <ProjetosDeLeiList
-            data={data}
-            mandato={mandato}
-            onlyApproved={onlyApproved}
-            onClickVereador={handleClickVereador}
-          />
-        </Suspense>
-      ) : (
-        <div className="mt-12 text-center">
-          <h3 className="text-lg">
-            Nenhum projeto foi aprovado até o momento!
-          </h3>
-        </div>
-      )}
+          </Suspense>
+        ) : (
+          <div className="mt-12 text-center">
+            <h3 className="text-lg">
+              Nenhum projeto foi aprovado até o momento!
+            </h3>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

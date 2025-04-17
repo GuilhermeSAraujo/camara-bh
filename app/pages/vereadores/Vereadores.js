@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { VereadoresCollection } from '../../api/vereadores/collection';
+import { ReturnButton } from '../../components/ui/ReturnButton';
 
 export default function Vereadores() {
   const navigate = useNavigate();
@@ -97,82 +98,88 @@ export default function Vereadores() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="mb-6 text-4xl font-bold">Vereadores</h2>
-
-      {/* Filtros */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row">
-        <div className="flex-1">
-          <input
-            type="text"
-            placeholder="Buscar por nome..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="w-full sm:w-48">
-          <select
-            value={selectedParty}
-            onChange={(e) => setSelectedParty(e.target.value)}
-            className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todos os partidos</option>
-            {parties.map((party) => (
-              <option key={party} value={party}>
-                {party}
-              </option>
-            ))}
-          </select>
-        </div>
+    <div>
+      <div className="m-4">
+        <ReturnButton />
       </div>
+      <div className="container mx-auto p-4">
+        <h2 className="mb-6 text-4xl font-bold">Vereadores</h2>
 
-      {/* Resultados */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-        {filteredVereadores.map((vereador) => {
-          const lastMandate = vereador.mandates?.[vereador.mandates.length - 1];
-          const imageUrl = findFirstAvailableImage(vereador.mandates);
-          const uniqueKey =
-            vereador.idVereador || vereador._id?._str || vereador._id;
-
-          return (
-            <div
-              key={uniqueKey}
-              className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-colors hover:bg-gray-50"
-              onClick={() => handleVereadorClick(vereador)}
+        {/* Filtros */}
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row">
+          <div className="flex-1">
+            <input
+              type="text"
+              placeholder="Buscar por nome..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="w-full sm:w-48">
+            <select
+              value={selectedParty}
+              onChange={(e) => setSelectedParty(e.target.value)}
+              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <div className="relative">
-                <img
-                  src={imageUrl}
-                  alt={vereador.name}
-                  className="h-24 w-24 rounded-full object-cover shadow-md"
-                  onError={(e) => {
-                    e.target.src = DEFAULT_AVATAR;
-                  }}
-                />
-                {lastMandate?.party && (
-                  <span className="absolute bottom-0 right-0 rounded-full bg-blue-500 px-2 py-1 text-xs text-white">
-                    {lastMandate.party}
-                  </span>
-                )}
-              </div>
-              <p className="mt-2 text-center text-sm font-medium">
-                {vereador.name}
-              </p>
-              <p className="text-center text-xs text-gray-500">
-                {lastMandate?.startYear} - {lastMandate?.endYear}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Mensagem quando não há resultados */}
-      {filteredVereadores.length === 0 && (
-        <div className="mt-8 text-center text-gray-500">
-          Nenhum vereador encontrado com os filtros selecionados.
+              <option value="">Todos os partidos</option>
+              {parties.map((party) => (
+                <option key={party} value={party}>
+                  {party}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      )}
+
+        {/* Resultados */}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          {filteredVereadores.map((vereador) => {
+            const lastMandate =
+              vereador.mandates?.[vereador.mandates.length - 1];
+            const imageUrl = findFirstAvailableImage(vereador.mandates);
+            const uniqueKey =
+              vereador.idVereador || vereador._id?._str || vereador._id;
+
+            return (
+              <div
+                key={uniqueKey}
+                className="flex cursor-pointer flex-col items-center rounded-lg p-4 transition-colors hover:bg-gray-50"
+                onClick={() => handleVereadorClick(vereador)}
+              >
+                <div className="relative">
+                  <img
+                    src={imageUrl}
+                    alt={vereador.name}
+                    className="h-24 w-24 rounded-full object-cover shadow-md"
+                    onError={(e) => {
+                      e.target.src = DEFAULT_AVATAR;
+                    }}
+                  />
+                  {lastMandate?.party && (
+                    <span className="absolute bottom-0 right-0 rounded-full bg-blue-500 px-2 py-1 text-xs text-white">
+                      {lastMandate.party}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-2 text-center text-sm font-medium">
+                  {vereador.name}
+                </p>
+                <p className="text-center text-xs text-gray-500">
+                  {lastMandate?.startYear} - {lastMandate?.endYear}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Mensagem quando não há resultados */}
+        {filteredVereadores.length === 0 && (
+          <div className="mt-8 text-center text-gray-500">
+            Nenhum vereador encontrado com os filtros selecionados.
+          </div>
+        )}
+      </div>
     </div>
   );
 }
