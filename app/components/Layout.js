@@ -1,5 +1,7 @@
+// No componente Layout.jsx
 import React, { Suspense, useState } from 'react';
 import { AppSidebar } from './ui/AppSidebar';
+import { useNavigate, Outlet } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,13 +12,19 @@ import {
 } from './ui/Breadcrumb';
 import { Separator } from './ui/Separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './ui/Sidebar';
-import { Outlet } from 'react-router-dom';
 import { Loading } from './Loading';
 
 export default function Layout() {
+  const navigate = useNavigate();
   const [breadcrumb, setBreadcrumb] = useState({
     group: 'Geral',
+    groupUrl: '/', // Adicionar URL padrão para o grupo
   });
+
+  const handleBreadcrumbClick = (url, e) => {
+    e.preventDefault();
+    navigate(url);
+  };
 
   return (
     <SidebarProvider>
@@ -29,8 +37,10 @@ export default function Layout() {
             <BreadcrumbList>
               <BreadcrumbItem className="hidden md:block">
                 <BreadcrumbLink
-                  href="#"
-                  onClick={(e) => console.log('olá!', e.target)}
+                  href={breadcrumb.groupUrl || '/'}
+                  onClick={(e) =>
+                    handleBreadcrumbClick(breadcrumb.groupUrl || '/', e)
+                  }
                 >
                   {breadcrumb?.group || 'Geral'}
                 </BreadcrumbLink>

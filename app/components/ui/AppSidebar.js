@@ -18,7 +18,6 @@ import {
 
 // This is sample data.
 const data = {
-  versions: ['1.0.1', '1.1.0-alpha', '2.0.0-beta1'],
   navMain: [
     {
       title: 'Projetos de Lei',
@@ -83,8 +82,19 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
     }));
   };
 
+  // Modificação para o AppSidebar.jsx
   const handleItemClick = ({ group, title, url }) => {
-    setBreadcrumb({ group, title });
+    // Encontre a URL do grupo
+    const groupData = navItems.find((navGroup) => navGroup.title === group);
+    const groupUrl = groupData ? groupData.url : '/';
+
+    setBreadcrumb({
+      group,
+      title,
+      groupUrl,
+      itemUrl: url,
+    });
+
     navigate(url);
 
     const updatedNavItems = navItems.map((navGroup) => ({
