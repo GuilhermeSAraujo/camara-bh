@@ -16,7 +16,7 @@ import {
   useSidebar,
 } from './Sidebar';
 
-// This is sample data.
+// Dados de exemplo
 const data = {
   navMain: [
     {
@@ -59,9 +59,10 @@ const data = {
 export function AppSidebar({ setBreadcrumb, ...props }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { setOpen } = useSidebar();
+  // Pegamos também setOpenMobile e isMobile do contexto
+  const { setOpen, isMobile, setOpenMobile } = useSidebar();
 
-  // Initialize with current path active
+  // Init navItems marcando o ativo pela rota
   const initializeNavItems = () =>
     data.navMain.map((group) => ({
       ...group,
@@ -74,7 +75,6 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
   const [navItems, setNavItems] = useState(initializeNavItems);
   const [expandedGroups, setExpandedGroups] = useState({});
 
-  // Toggle group expansion
   const toggleGroup = (groupTitle) => {
     setExpandedGroups((prev) => ({
       ...prev,
@@ -83,32 +83,32 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
   };
 
   const handleItemClick = ({ group, title, url }) => {
-    // Encontre a URL do grupo
-    const groupData = navItems.find((navGroup) => navGroup.title === group);
+    // Atualiza breadcrumb
+    const groupData = navItems.find((g) => g.title === group);
     const groupUrl = groupData ? groupData.url : '/';
+    setBreadcrumb({ group, title, groupUrl, itemUrl: url });
 
-    setBreadcrumb({
-      group,
-      title,
-      groupUrl,
-      itemUrl: url,
-    });
+    // Atualiza ativo
+    setNavItems(
+      navItems.map((navGroup) => ({
+        ...navGroup,
+        items: navGroup.items.map((item) => ({
+          ...item,
+          isActive: item.title === title,
+        })),
+      }))
+    );
+
+    window.scrollTo(0, 0);
+
+    // FECHA A SIDEBAR DEPENDENDO DO DISPOSITIVO
+    if (isMobile) {
+      setOpenMobile(false);
+    } else {
+      setOpen(false);
+    }
 
     navigate(url);
-
-    const updatedNavItems = navItems.map((navGroup) => ({
-      ...navGroup,
-      items: navGroup.items.map((item) => ({
-        ...item,
-        isActive: item.title === title,
-      })),
-    }));
-
-    setNavItems(updatedNavItems);
-
-    setOpen(false);
-    // Scroll to top
-    window.scrollTo(0, 0);
   };
 
   const handleKeyDown = (event, action) => {
@@ -126,9 +126,10 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
       <SidebarContent>
         <nav aria-label="Menu de navegação principal">
           {navItems.map((group) => {
-            const isExpanded = expandedGroups[group.title] !== false; // Default to expanded if not set
-            const groupId = `group-${group.title.replace(/\s+/g, '-').toLowerCase()}`;
-            const menuId = `menu-${group.title.replace(/\s+/g, '-').toLowerCase()}`;
+            const isExpanded = expandedGroups[group.title] !== false;
+            const safeId = group.title.replace(/\s+/g, '-').toLowerCase();
+            const groupId = `group-${safeId}`;
+            const menuId = `menu-${safeId}`;
 
             return (
               <SidebarGroup key={group.title}>
