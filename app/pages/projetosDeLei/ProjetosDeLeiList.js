@@ -40,11 +40,17 @@ export default function ProjetosDeLeiList({
             value={item.value}
             max={max}
             role="progressbar"
-            aria-valuenow={item.value}
             aria-valuemin={0}
             aria-valuemax={max}
+            aria-valuenow={item.value}
+            aria-label={`Projetos aprovados por ${item.author}`}
           />
-          <h3 className="col-span-1">{item.value}</h3>
+          <p
+            className="col-span-1"
+            aria-valuetext={`Vereador ${item.author} tem ${item.value} projetos aprovados`}
+          >
+            {item.value}
+          </p>
         </React.Fragment>
       ))}
     </div>

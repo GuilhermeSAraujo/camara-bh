@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { VolumeX, Pause, Play, Settings } from 'lucide-react';
+import { Pause, Play, VolumeX } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
