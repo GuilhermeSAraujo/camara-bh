@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
+import { withTextToSpeech } from '../../components/TextToSpeech';
 import { ReturnButton } from '../../components/ui/ReturnButton';
 import { Spinner } from '../../components/ui/Spinner';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
@@ -16,7 +17,7 @@ import { getStatusColor, getStatusColorHex } from '../../lib/utils';
 const DEFAULT_AVATAR =
   'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
 
-export function VereadorDetalhes() {
+function VereadorDetalhes() {
   const { idVereador } = useParams();
   const [onlyApproved, setOnlyApproved] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(null);
@@ -426,3 +427,5 @@ export function VereadorDetalhes() {
     </div>
   );
 }
+
+export default withTextToSpeech(VereadorDetalhes);

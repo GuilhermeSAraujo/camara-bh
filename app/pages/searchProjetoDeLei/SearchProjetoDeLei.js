@@ -34,8 +34,9 @@ import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { getStatusColor } from '../../lib/utils';
+import { withTextToSpeech } from '../../components/TextToSpeech';
 
-export default function SearchProjetoDeLei() {
+function SearchProjetoDeLei() {
   const navigate = useNavigate();
   const [textSearch, setTextSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('Mais recentes');
@@ -446,3 +447,5 @@ export default function SearchProjetoDeLei() {
     </div>
   );
 }
+
+export default withTextToSpeech(SearchProjetoDeLei);

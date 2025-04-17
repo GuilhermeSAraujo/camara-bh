@@ -23,6 +23,7 @@ import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { getPartyColor } from '../../lib/utils';
+import { withTextToSpeech } from '../../components/TextToSpeech';
 
 const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 
@@ -37,7 +38,7 @@ const chartConfig = {
   },
 };
 
-export default function ProjetosDeLeiPartidos() {
+function ProjetosDeLeiPartidos() {
   const navigate = useNavigate();
   const [onlyApproved, setOnlyApproved] = useState(false);
   const [mandato, setMandato] = useState('2021;2024');
@@ -217,3 +218,5 @@ export default function ProjetosDeLeiPartidos() {
     </div>
   );
 }
+
+export default withTextToSpeech(ProjetosDeLeiPartidos);

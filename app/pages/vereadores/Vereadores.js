@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { withTextToSpeech } from '../../components/TextToSpeech';
 import { ReturnButton } from '../../components/ui/ReturnButton';
 import { Spinner } from '../../components/ui/Spinner';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
@@ -7,7 +8,7 @@ import { useMethodWithState } from '../../hooks/useMethodWithState';
 const DEFAULT_AVATAR =
   'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
 
-export default function Vereadores() {
+function Vereadores() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
@@ -180,3 +181,5 @@ export default function Vereadores() {
     </div>
   );
 }
+
+export default withTextToSpeech(Vereadores);

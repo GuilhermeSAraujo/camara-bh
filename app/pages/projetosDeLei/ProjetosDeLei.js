@@ -1,8 +1,10 @@
-import { ArrowLeft, FileCheck, Filter } from 'lucide-react';
+import { FileCheck, Filter } from 'lucide-react';
+import { Meteor } from 'meteor/meteor';
 import React, { Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../../components/ui/Button';
+import { withTextToSpeech } from '../../components/TextToSpeech';
 import { Label } from '../../components/ui/Label';
+import { ReturnButton } from '../../components/ui/ReturnButton';
 import {
   Select,
   SelectContent,
@@ -15,8 +17,6 @@ import {
 import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
-import { Meteor } from 'meteor/meteor';
-import { ReturnButton } from '../../components/ui/ReturnButton';
 
 const ChartDetailsModal = React.lazy(
   () => import('../../components/ui/ChartDetailsModal')
@@ -34,7 +34,7 @@ const ProjetosDeLeiList = React.lazy(
 
 const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 
-export default function ProjetosDeLei() {
+function ProjetosDeLei() {
   const navigate = useNavigate();
   const [mandato, setMandato] = useState('2021;2024');
   const [onlyApproved, setOnlyApproved] = useState(false);
@@ -164,3 +164,5 @@ export default function ProjetosDeLei() {
     </div>
   );
 }
+
+export default withTextToSpeech(ProjetosDeLei);
