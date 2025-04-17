@@ -119,7 +119,7 @@ function VereadorDetalhes() {
       <div className="m-4">
         <ReturnButton />
       </div>
-      <div className="container mx-auto p-4 md:max-w-7xl">
+      <div className="container mx-auto px-4 md:max-w-7xl">
         {isLoadingVereador ? (
           <Spinner
             className="mt-12"
@@ -128,7 +128,7 @@ function VereadorDetalhes() {
             aria-live="polite"
           />
         ) : (
-          <main className="flex-1 bg-gray-100">
+          <main className="flex-1 rounded-xl bg-gray-100">
             {/* Cabeçalho */}
             <div className="mb-6 mt-6 flex items-start p-4">
               {' '}
@@ -141,15 +141,15 @@ function VereadorDetalhes() {
                   e.target.src = DEFAULT_AVATAR;
                 }}
               />
-              <div>
+              <div className="grid gap-2">
                 <h1 className="text-3xl font-bold">{vereador.name}</h1>
                 {vereador.name !== vereador.fullName && (
-                  <p className="mt-1 text-gray-600">
+                  <p className="text-gray-600">
                     Nome civil:{' '}
                     <span className="font-medium">{vereador.fullName}</span>
                   </p>
                 )}
-                <p className="mt-2 text-gray-600">
+                <p className="text-gray-600">
                   Mandato mais recente:{' '}
                   <span className="font-semibold">
                     {lastMandate?.startYear} - {lastMandate?.endYear}

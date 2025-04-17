@@ -15,9 +15,9 @@ const SearchProjetoDeLei = React.lazy(
 );
 const Vereadores = React.lazy(() => import('../pages/vereadores/Vereadores'));
 
-const VereadorDetalhes = React.lazy(() => import('../pages/vereadorDetalhes/VereadorDetalhes').then(module => ({
-  default: module.VereadorDetalhes
-  })));
+const VereadorDetalhes = React.lazy(
+  () => import('../pages/vereadorDetalhes/VereadorDetalhes')
+);
 
 export const router = createBrowserRouter([
   {
