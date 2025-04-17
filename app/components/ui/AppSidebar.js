@@ -82,7 +82,6 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
     }));
   };
 
-  // Modificação para o AppSidebar.jsx
   const handleItemClick = ({ group, title, url }) => {
     // Encontre a URL do grupo
     const groupData = navItems.find((navGroup) => navGroup.title === group);

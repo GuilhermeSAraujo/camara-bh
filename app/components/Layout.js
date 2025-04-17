@@ -18,7 +18,7 @@ export default function Layout() {
   const navigate = useNavigate();
   const [breadcrumb, setBreadcrumb] = useState({
     group: 'Geral',
-    groupUrl: '/', // Adicionar URL padrão para o grupo
+    groupUrl: '/',
   });
 
   const handleBreadcrumbClick = (url, e) => {
