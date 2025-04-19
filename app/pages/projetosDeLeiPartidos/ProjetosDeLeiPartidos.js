@@ -88,7 +88,7 @@ function ProjetosDeLeiPartidos() {
 
           <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-6">
             <div className="flex items-center">
-              <Filter size="20px" className="no-tts" aria-hidden="true" />
+              <Filter size="20px" className="" aria-hidden="true" />
               <Label
                 className="text-md px-3"
                 id="mandato-label"
@@ -105,7 +105,7 @@ function ProjetosDeLeiPartidos() {
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Selecione o mandato desejado" />
                 </SelectTrigger>
-                <SelectContent className="no-tts">
+                <SelectContent className="">
                   <SelectGroup>
                     <SelectLabel>Mandatos</SelectLabel>
                     {filterOptions.map((year) => (
@@ -123,7 +123,7 @@ function ProjetosDeLeiPartidos() {
             </div>
 
             <div className="flex items-center">
-              <FileCheck size="20px" className="no-tts" aria-hidden="true" />
+              <FileCheck size="20px" className="" aria-hidden="true" />
               <Label htmlFor="onlyApprovedSwitch" className="text-md px-3">
                 Apenas <span className="font-semibold">Aprovados</span>
               </Label>
@@ -161,15 +161,15 @@ function ProjetosDeLeiPartidos() {
         <section aria-label="Gráfico de projetos por partido">
           {isLoading ? (
             <div>
-              <Spinner className="no-tts mt-12" size="large" />
+              <Spinner className="mt-9" size="large" />
               <span className="sr-only">
                 Carregando dados dos projetos de lei por partido
               </span>
             </div>
           ) : data?.length > 0 ? (
             <div>
-              <div className="no-tts mt-4 text-center font-bold">
-                Foram analisados {projetosDeLeiQuantity} Projetos de Lei de{' '}
+              <div className="mt-12 text-center font-bold md:mt-4">
+                {projetosDeLeiQuantity} Projetos de Lei encontrados de{' '}
                 {data?.length} partidos.
               </div>
 
@@ -199,8 +199,8 @@ function ProjetosDeLeiPartidos() {
                 </p>
               </div>
 
-              <div className="no-tts mt-10 gap-4 overflow-x-auto">
-                <div className="min-w-[300px]">
+              <div className="mt-10 gap-4 overflow-x-auto">
+                <div className="min-w-[900px] md:min-w-[300px]">
                   <ChartContainer config={chartConfig} className="w-full">
                     <BarChart
                       accessibilityLayer
@@ -268,7 +268,7 @@ function ProjetosDeLeiPartidos() {
                 </div>
               </div>
 
-              <div className="no-tts mt-2 text-center">
+              <div className="mt-2 text-center">
                 <p className="text-xs text-gray-600">
                   Projetos de Lei {onlyApproved ? 'Aprovados' : 'Propostos'}{' '}
                   entre {mandato.split(';')[0]} - {mandato.split(';')[1]}

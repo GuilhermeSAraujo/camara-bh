@@ -2,6 +2,7 @@ import { FileCheck, Filter, SortAsc, Users } from 'lucide-react';
 import { Meteor } from 'meteor/meteor';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { withTextToSpeech } from '../../components/TextToSpeech';
 import { Button } from '../../components/ui/Button';
 import {
   Card,
@@ -34,7 +35,6 @@ import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
 import { getStatusColor } from '../../lib/utils';
-import { withTextToSpeech } from '../../components/TextToSpeech';
 
 function SearchProjetoDeLei() {
   const navigate = useNavigate();
@@ -357,7 +357,7 @@ function SearchProjetoDeLei() {
           </div>
 
           {/* Botão de pesquisa após todos os filtros */}
-          <div className="mt-2 flex justify-start">
+          <div className="mt-4 flex justify-start md:mt-2">
             <Button
               onClick={handleSearch}
               className="w-full bg-green-500 hover:bg-green-800 md:w-auto"
@@ -376,7 +376,9 @@ function SearchProjetoDeLei() {
           />
         ) : (
           <div>
-            <div className="mt-4 text-center font-bold">{chartTitle}</div>
+            <div className="mt-8 text-center font-bold md:mt-4">
+              {chartTitle}
+            </div>
             <div className="mt-2 text-center">
               <p className="text-sm text-gray-600">
                 Resultados encontrados:{' '}
