@@ -21,20 +21,23 @@ export default function ProjetosDeLeiList({
   return (
     <div className="mt-10 grid grid-cols-5 gap-4 md:grid-cols-7">
       <div className="hidden md:col-span-2 md:block" />
-      <div className="col-span-5 mt-4 text-center font-bold md:col-span-3 md:mt-0 md:text-left">
-        {chartTitle}
+      <div className="col-span-5 mt-4 text-center md:col-span-3 md:mt-0 md:text-left">
+        <p className="font-bold">{chartTitle}</p>
+        <span className="sr-only">{chartTitle}.</span>
       </div>
       <div className="hidden items-center md:col-span-2 md:block" />
 
       {data.map((item) => (
         <div
           key={item.author}
+          aria-hidden="true"
           className="col-span-5 my-1 grid grid-cols-6 items-center gap-4 md:col-span-7 md:grid-cols-10"
         >
           <button
             onClick={(e) =>
               onClickVereador(e, item.authorId?._str || item.authorId)
             }
+            aria-hidden="true"
             className="col-span-3 flex items-center gap-3 text-left hover:text-blue-600 hover:underline md:col-span-2"
           >
             <Avatar>
@@ -43,24 +46,21 @@ export default function ProjetosDeLeiList({
             {item.author}
           </button>
 
-          <Progress
-            barColor={getPartyColor(item.party)}
-            className="col-span-2 md:col-span-7"
-            value={item.value}
-            max={max}
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={max}
-            aria-valuenow={item.value}
-            aria-label={`Projetos aprovados por ${item.author}`}
-          />
+          <div className="relative col-span-2 md:col-span-7">
+            <Progress
+              barColor={getPartyColor(item.party)}
+              className="w-full"
+              value={item.value}
+              max={max}
+              role="progressbar"
+              aria-hidden="true"
+            />
+            <span className="sr-only">
+              {item.author} {item.value}.
+            </span>
+          </div>
 
-          <p
-            className="col-span-1"
-            aria-valuetext={`Vereador ${item.author} tem ${item.value} projetos aprovados`}
-          >
-            {item.value}
-          </p>
+          <p className="no-tts col-span-1 ml-1">{item.value}</p>
         </div>
       ))}
     </div>

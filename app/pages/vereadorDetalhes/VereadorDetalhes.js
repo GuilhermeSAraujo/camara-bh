@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Cell,
@@ -21,6 +21,10 @@ function VereadorDetalhes() {
   const { idVereador } = useParams();
   const [onlyApproved, setOnlyApproved] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const findFirstAvailableImage = (mandates) => {
     if (!mandates || !Array.isArray(mandates)) return DEFAULT_AVATAR;
@@ -130,13 +134,16 @@ function VereadorDetalhes() {
         ) : (
           <main className="flex-1 rounded-xl bg-gray-100">
             {/* Cabeçalho */}
+            <span className="sr-only">
+              Página de detalhes do vereador: {vereador.name}.
+            </span>
+
             <div className="mb-6 mt-6 flex items-start p-4">
               {' '}
-              {/* Alteramos aqui */}
               <img
                 src={imageUrl}
                 alt={vereador.name}
-                className="mr-6 h-32 w-32 rounded-full object-cover shadow-md"
+                className="mr-6 h-40 w-32 rounded-xl object-cover shadow-md"
                 onError={(e) => {
                   e.target.src = DEFAULT_AVATAR;
                 }}
@@ -144,31 +151,44 @@ function VereadorDetalhes() {
               <div className="grid gap-2">
                 <h1 className="text-3xl font-bold">{vereador.name}</h1>
                 {vereador.name !== vereador.fullName && (
-                  <p className="text-gray-600">
-                    Nome civil:{' '}
-                    <span className="font-medium">{vereador.fullName}</span>
-                  </p>
+                  <>
+                    <p className="text-gray-600">
+                      Nome civil:{' '}
+                      <span className="font-medium">{vereador.fullName}</span>
+                    </p>
+                    <span className="sr-only">
+                      Nome civil: {vereador.fullName}.
+                    </span>
+                  </>
                 )}
                 <p className="text-gray-600">
                   Mandato mais recente:{' '}
                   <span className="font-semibold">
                     {lastMandate?.startYear} - {lastMandate?.endYear}
                   </span>
+                  <span className="sr-only">
+                    Mandato mais recente: {lastMandate?.startYear} -{' '}
+                    {lastMandate?.endYear}.
+                  </span>
                 </p>
                 <p className="text-gray-600">
                   Último partido:{' '}
                   <span className="font-semibold">{lastMandate?.party}</span>
                 </p>
+                <span className="sr-only">
+                  Último partido: {lastMandate?.party}.
+                </span>
               </div>
             </div>
 
             {/* Mandatos */}
             <div className="mb-6 rounded-lg bg-white p-6 shadow">
               <h2 className="mb-4 text-xl font-bold">Histórico de Mandatos</h2>
+              <span className="sr-only">Histórico de mandatos:</span>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                {vereador.mandates?.map((mandato, index) => (
+                {vereador.mandates?.map((mandato) => (
                   <div
-                    key={index}
+                    key={mandato.startYear}
                     className="rounded-lg border p-4 text-center"
                   >
                     <p className="font-semibold">
@@ -177,6 +197,10 @@ function VereadorDetalhes() {
                     <p className="mt-1 text-sm text-gray-500">
                       {mandato.party}
                     </p>
+                    <span className="sr-only">
+                      De {mandato.startYear} a {mandato.endYear} partido:
+                      {mandato.party}.
+                    </span>
                   </div>
                 ))}
               </div>
@@ -210,14 +234,24 @@ function VereadorDetalhes() {
                       ) : (
                         <span className="ml-2 text-sm font-normal text-gray-500 underline">
                           Clique no Gráfico para Filtrar
+                          <span className="sr-only">
+                            Você pode clicar no gráfico para filtrar projetos
+                            por status.
+                          </span>
                         </span>
                       )}
                     </h2>
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       <div
-                        className="mt-4 h-[315px] focus:outline-none"
+                        className="mt-4 h-[315px] self-center focus:outline-none"
                         tabIndex={-1}
+                        aria-label="Gráfico de pizza mostrando a distribuição de projetos por status"
                       >
+                        <span className="sr-only">
+                          Este gráfico mostra a distribuição dos projetos de lei
+                          por status. Você pode interagir com o gráfico para
+                          filtrar os resultados.
+                        </span>
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart style={{ outline: 'none' }}>
                             <Pie
@@ -304,6 +338,10 @@ function VereadorDetalhes() {
                                     100
                                   ).toFixed(1)}
                                   %
+                                  <span className="sr-only">
+                                    {status.value} projetos de lei com status{' '}
+                                    {status.name}.
+                                  </span>
                                 </p>
                               </div>
                             )
@@ -355,60 +393,69 @@ function VereadorDetalhes() {
                   {filteredProjetos?.length > 0 ? (
                     <div className="space-y-4">
                       {filteredProjetos.map((projeto) => (
-                        <div
-                          key={projeto._id}
-                          className="rounded-lg border p-4 transition-colors hover:bg-gray-50"
-                        >
-                          <h3 className="text-lg font-semibold">
-                            {projeto.title}
-                          </h3>
-                          <p className="mt-2 text-gray-600">
-                            {projeto.summary}
-                          </p>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            <span className="rounded bg-gray-100 px-2 py-1 text-sm">
-                              Status:{' '}
-                              <span
-                                className={`${getStatusColor(projeto.status)} font-semibold`}
-                              >
-                                {projeto.status}
+                        <>
+                          <div
+                            key={projeto._id}
+                            className="rounded-lg border p-4 transition-colors hover:bg-gray-50"
+                          >
+                            <h3 className="text-lg font-semibold">
+                              {projeto.title}
+                            </h3>
+                            <p className="mt-2 text-gray-600">
+                              {projeto.summary}
+                            </p>
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              <span className="rounded bg-gray-100 px-2 py-1 text-sm">
+                                Status:{' '}
+                                <span
+                                  className={`${getStatusColor(projeto.status)} font-semibold`}
+                                >
+                                  {projeto.status}
+                                </span>
                               </span>
-                            </span>
-                            <span className="rounded bg-gray-100 px-2 py-1 text-sm">
-                              Ano:{' '}
-                              <span className="font-semibold">
-                                {projeto.year}
+                              <span className="rounded bg-gray-100 px-2 py-1 text-sm">
+                                Ano:{' '}
+                                <span className="font-semibold">
+                                  {projeto.year}
+                                </span>
                               </span>
-                            </span>
+                            </div>
+                            <div className="mt-3 flex gap-3">
+                              {projeto.textLink && (
+                                <a
+                                  href={handleClickProjeto(projeto)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-sm text-blue-600 hover:cursor-pointer hover:underline"
+                                >
+                                  Ver projeto completo
+                                </a>
+                              )}
+                              {projeto.initialTextLink && (
+                                <a
+                                  href={projeto.initialTextLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-sm text-blue-600 hover:underline"
+                                >
+                                  Ver texto inicial
+                                </a>
+                              )}
+                            </div>
                           </div>
-                          <div className="mt-3 flex gap-3">
-                            {projeto.textLink && (
-                              <a
-                                href={handleClickProjeto(projeto)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-blue-600 hover:cursor-pointer hover:underline"
-                              >
-                                Ver projeto completo
-                              </a>
-                            )}
-                            {projeto.initialTextLink && (
-                              <a
-                                href={projeto.initialTextLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-blue-600 hover:underline"
-                              >
-                                Ver texto inicial
-                              </a>
-                            )}
-                          </div>
-                        </div>
+                          <span className="sr-only">
+                            {projeto.title} com status {projeto.status} de
+                            {projeto.year}.{projeto.summary}.
+                          </span>
+                        </>
                       ))}
                     </div>
                   ) : (
                     <p className="text-gray-600">
-                      Nenhum projeto de lei encontrado.
+                      Nenhum projeto de lei encontrado para o vereador.
+                      <span className="sr-only">
+                        Nenhum projeto de lei encontrado para o vereador.
+                      </span>
                     </p>
                   )}
                 </div>

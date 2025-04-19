@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RoutePaths } from '../../general/RoutePaths';
+import { Separator } from './Separator';
 import { NavBarCaption } from './NavBarCaption';
 import {
   Sidebar,
@@ -122,9 +123,9 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
       <SidebarHeader>
         <NavBarCaption handleItemClick={handleItemClick} />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="md:mt-3">
         <nav aria-label="Menu de navegação principal">
-          {navItems.map((group) => {
+          {navItems.map((group, i) => {
             const isExpanded = expandedGroups[group.title] !== false;
             const safeId = group.title.replace(/\s+/g, '-').toLowerCase();
             const groupId = `group-${safeId}`;
@@ -182,6 +183,7 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
                     ))}
                   </SidebarMenu>
                 </SidebarGroupContent>
+                {i % 2 === 0 && <Separator className="mt-2" />}
               </SidebarGroup>
             );
           })}

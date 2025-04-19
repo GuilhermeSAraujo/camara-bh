@@ -63,43 +63,69 @@ function Home() {
   ];
 
   return (
-    <div className="container mx-auto p-4 md:max-w-7xl">
-      <div className="mb-20 grid grid-cols-1 items-center justify-around gap-6 md:grid-cols-3">
-        <div className="col-span-1 space-y-4 text-left md:col-span-2 md:text-left">
-          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-            Transparência na Câmara Municipal
-          </h1>
-          <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            Belo Horizonte - Minas Gerais
-          </h2>
-          <p className="leading-7">
-            Acompanhe de forma clara e acessível o trabalho dos vereadores de
-            Belo Horizonte. Explore dados sobre projetos de lei, presença nas
-            sessões e outras informações relevantes para a cidade.
-          </p>
+    <>
+      <div className="container mx-auto p-4 md:max-w-7xl">
+        <div className="mb-20 grid grid-cols-1 items-center justify-around gap-6 md:grid-cols-3">
+          <div className="col-span-1 space-y-4 text-left md:col-span-2 md:text-left">
+            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+              Transparência na Câmara Municipal
+            </h1>
+            <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+              Belo Horizonte, Minas Gerais
+            </h2>
+            <p className="leading-7">
+              Acompanhe de forma clara e intuitiva o trabalho dos vereadores de
+              Belo Horizonte. Explore cada etapa dos projetos de lei — das
+              propostas às aprovações —, conheça os perfis dos parlamentares e
+              fique por dentro das <span className="font-bold">DECISÕES</span>{' '}
+              essenciais que impactam nossa cidade.
+            </p>
+            <p className="leading-7">
+              Informações oficiais extraídas diretamente da{' '}
+              <a
+                href="https://www.cmbh.mg.gov.br/"
+                target="_blank"
+                className="text-blue-500 underline"
+              >
+                Câmara Municipal de Belo Horizonte
+              </a>
+              . Navegue entre <strong>108 vereadores</strong> cadastrados e
+              descubra <strong>3340 projetos de lei</strong> registrados.
+            </p>
+          </div>
+          <div className="col-span-1 flex w-full items-center justify-center md:col-span-1">
+            <img
+              src="/brasao-bh.png"
+              loading="lazy"
+              alt="Brasão de Belo Horizonte"
+              className="h-auto w-full max-w-[230px]"
+            />
+          </div>
         </div>
-        <div className="col-span-1 flex w-full items-center justify-center md:col-span-1">
-          <img
-            src="/brasao-bh.png"
-            loading="lazy"
-            alt="Bandeira de Belo Horizonte"
-            className="h-auto w-full max-w-[230px]"
-          />
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {cardData.map((card, index) => (
-          <CardItem
-            key={index}
-            title={card.title}
-            description={card.description}
-            icon={card.icon}
-            bgColor={card.bgColor}
-          />
-        ))}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {cardData.map((card, index) => (
+            <CardItem
+              key={index}
+              title={card.title}
+              description={card.description}
+              icon={card.icon}
+              bgColor={card.bgColor}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+      <span className="sr-only">
+        Transparência na Câmara Municipal de BH, em Belo Horizonte, Minas
+        Gerais. Acompanhe de forma clara e intuitiva o trabalho dos vereadores
+        de Belo Horizonte. Explore cada etapa dos projetos de lei — das
+        propostas às aprovações —, conheça os perfis dos parlamentares e acesse
+        dados essenciais que impactam nossa cidade. Informações oficiais
+        extraídas diretamente da Câmara Municipal de Belo Horizonte. 108
+        vereadores cadastrados; 3340 projetos de lei registrados.
+        {cardData.map((c) => `${c.title}: ${c.description}.`)}
+      </span>
+    </>
   );
 }
 

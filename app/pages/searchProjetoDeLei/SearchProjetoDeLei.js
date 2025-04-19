@@ -246,6 +246,7 @@ function SearchProjetoDeLei() {
           <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
             Busque por <span className="underline">Projetos de Lei</span>
           </h2>
+          <span className="sr-only">Busque por Projetos de Lei.</span>
         </div>
 
         {/* Filtros */}
@@ -273,6 +274,10 @@ function SearchProjetoDeLei() {
               className="w-full md:max-w-xs md:flex-grow"
               placeholder="Animais | Saúde | Educação | Esporte"
             />
+            <span className="sr-only">
+              Filtro por palavras-chave:{' '}
+              {textSearch.length > 0 ? textSearch : 'Nenhum'}.
+            </span>
           </div>
 
           {/* Filtro de vereadores */}
@@ -300,6 +305,13 @@ function SearchProjetoDeLei() {
                 ))}
               </SelectContent>
             </Select>
+            <span className="sr-only">
+              Filtro por vereador:{' '}
+              {vereadorId
+                ? vereadoresSelect?.find((v) => v._id === vereadorId)?.name
+                : 'Nenhum'}
+              .
+            </span>
           </div>
 
           {/* Filtro de ordenação */}
@@ -318,6 +330,7 @@ function SearchProjetoDeLei() {
                 <SelectItem value="Mais antigos">Mais antigos</SelectItem>
               </SelectContent>
             </Select>
+            <span className="sr-only">Ordenação por: {sortOrder}.</span>
           </div>
 
           {/* Filtro de aprovados */}
@@ -337,6 +350,10 @@ function SearchProjetoDeLei() {
                 />
               </div>
             </div>
+            <span className="sr-only">
+              Filtro para apenas projetos aprovados?{' '}
+              {onlyApproved ? 'Sim' : 'Não, todos'}.
+            </span>
           </div>
 
           {/* Botão de pesquisa após todos os filtros */}
@@ -371,43 +388,54 @@ function SearchProjetoDeLei() {
                   </span>
                 )}
               </p>
+              <span className="sr-only">
+                Resultados encontrados: {totalItems}. (Exibindo{' '}
+                {(currentPage - 1) * itemsPerPage + 1} -{' '}
+                {Math.min(currentPage * itemsPerPage, totalItems)}).
+              </span>
             </div>
             <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
               {paginatedData.map((projeto) => (
-                <Card
-                  key={projeto._id}
-                  className="flex h-full flex-col hover:cursor-pointer"
-                  onClick={() => handleClickProjeto(projeto)}
-                >
-                  <CardHeader>
-                    <CardTitle className="text-xl">{projeto.title}</CardTitle>
-                    <CardDescription
-                      className="cursor-pointer hover:underline"
-                      onClick={(e) => handleClickVereador(e, projeto)}
-                    >
-                      {projeto.author}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <p>{projeto.summary}</p>
-                  </CardContent>
-                  <CardFooter className="flex justify-between">
-                    <span className="text-sm text-gray-600">
-                      Ano: {projeto.year}
-                    </span>
-                    <span
-                      className={`font-medium ${getStatusColor(projeto.status)}`}
-                    >
-                      {projeto.status}
-                    </span>
-                  </CardFooter>
-                </Card>
+                <>
+                  <Card
+                    key={projeto.title}
+                    className="flex h-full flex-col hover:cursor-pointer"
+                    onClick={() => handleClickProjeto(projeto)}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-xl">{projeto.title}</CardTitle>
+                      <CardDescription
+                        className="cursor-pointer hover:underline"
+                        onClick={(e) => handleClickVereador(e, projeto)}
+                      >
+                        {projeto.author}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <p>{projeto.summary}</p>
+                    </CardContent>
+                    <CardFooter className="flex justify-between">
+                      <span className="text-sm text-gray-600">
+                        Ano: {projeto.year}
+                      </span>
+                      <span
+                        className={`font-medium ${getStatusColor(projeto.status)}`}
+                      >
+                        {projeto.status}
+                      </span>
+                    </CardFooter>
+                  </Card>
+                  <span className="sr-only">
+                    {projeto.title}.{projeto.author.replace('Ver.(a)', '')}.{' '}
+                    {projeto.summary}. Ano: {projeto.year}. {projeto.status}.
+                  </span>
+                </>
               ))}
             </div>
 
             {/* Componente de Paginação */}
             {totalPages > 1 && (
-              <Pagination className="mt-8">
+              <Pagination className="no-tts mt-8">
                 <PaginationContent className="flex flex-wrap gap-2">
                   <PaginationItem>
                     <PaginationPrevious

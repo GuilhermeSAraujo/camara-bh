@@ -90,7 +90,13 @@ function Vereadores() {
         <ReturnButton />
       </div>
       <div className="container mx-auto p-4">
-        <h2 className="mb-6 text-4xl font-bold">Vereadores</h2>
+        <h2 className="mb-6 text-4xl font-bold">
+          Busque por <span className="underline">Vereadores</span>
+        </h2>
+        <span className="sr-only">
+          Página de Vereadores. Aqui você pode visualizar e filtrar os
+          vereadores da câmara municipal.
+        </span>
 
         {/* Filtros */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row">
@@ -101,13 +107,19 @@ function Vereadores() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Buscar vereador por nome"
             />
+            <span className="sr-only">
+              Filtro de busca por nome:{' '}
+              {searchTerm.length > 0 ? searchTerm : 'Nenhum texto informado'}.
+            </span>
           </div>
           <div className="w-full sm:w-48">
             <select
               value={selectedParty}
               onChange={(e) => setSelectedParty(e.target.value)}
               className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Filtrar por partido político"
             >
               <option value="">Todos os partidos</option>
               {parties.map((party) => (
@@ -116,19 +128,33 @@ function Vereadores() {
                 </option>
               ))}
             </select>
+            <span className="sr-only">
+              Filtro por partido: {selectedParty || 'Todos os partidos'}.
+            </span>
           </div>
         </div>
 
         {/* Resultados */}
         {isLoading ? (
-          <Spinner
-            className="mt-12"
-            size="large"
-            role="status"
-            aria-live="polite"
-          />
+          <>
+            <Spinner
+              className="mt-12"
+              size="large"
+              role="status"
+              aria-live="polite"
+            />
+            <span className="sr-only">
+              Carregando lista de vereadores, por favor aguarde.
+            </span>
+          </>
         ) : (
           <>
+            <span className="sr-only">
+              {filteredVereadores?.length > 0
+                ? `${filteredVereadores.length} vereadores encontrados.`
+                : 'Nenhum vereador encontrado com os filtros selecionados.'}
+            </span>
+
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {filteredVereadores?.length > 0 &&
                 filteredVereadores.map((vereador) => {
@@ -147,7 +173,7 @@ function Vereadores() {
                       <div className="relative">
                         <img
                           src={imageUrl}
-                          alt={vereador.name}
+                          alt={`Foto do vereador ${vereador.name}`}
                           className="h-24 w-24 rounded-full object-cover shadow-md"
                           onError={(e) => {
                             e.target.src = DEFAULT_AVATAR;
@@ -162,13 +188,16 @@ function Vereadores() {
                       <p className="mt-2 text-center text-sm font-medium">
                         {vereador.name}
                       </p>
-                      <p className="text-center text-xs text-gray-500">
-                        {lastMandate?.startYear} - {lastMandate?.endYear}
-                      </p>
+
+                      <span className="sr-only">
+                        {vereador.name}.
+                        {lastMandate?.party ? `${lastMandate.party}.` : ''}
+                      </span>
                     </div>
                   );
                 })}
             </div>
+
             {/* Mensagem quando não há resultados */}
             {filteredVereadores?.length === 0 && (
               <div className="mt-8 text-center text-gray-500">

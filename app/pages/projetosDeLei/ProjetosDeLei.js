@@ -71,95 +71,131 @@ function ProjetosDeLei() {
       </div>
       <div className="container mx-auto p-4 md:max-w-7xl">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
-            <span className="underline">Projetos de Lei</span> propostos e
-            aprovados por <span className="underline">Vereador</span>
+          <h2 className="not-tts scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl">
+            <span className="no-tts underline">Projetos de Lei</span> propostos
+            e aprovados por <span className="no-tts underline">Vereador</span>
           </h2>
+          <span className="sr-only">
+            Projetos de Lei propostos e aprovados por Vereador.
+          </span>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-6">
-          <div className="flex items-center">
-            <Filter size="20px" aria-hidden="true" />
-            <Label className="text-md px-3">Selecione o mandato</Label>
-            <Select
-              value={mandato}
-              onValueChange={handleChangeMandato}
-              aria-label="Selecione o mandato"
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Selecione o mandato desejado" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Mandatos</SelectLabel>
-                  {filterOptions.map((year) => (
-                    <SelectItem key={year} value={year}>
-                      {year.replace(';', ' - ')}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center">
-            <FileCheck size="20px" aria-hidden="true" />
-            <Label htmlFor="onlyApprovedSwitch" className="text-md px-3">
-              Apenas <span className="font-semibold">Aprovados</span>
-            </Label>
-            <Switch
-              id="onlyApprovedSwitch"
-              checked={onlyApproved}
-              onCheckedChange={() => setOnlyApproved((v) => !v)}
-            />
-          </div>
-          <div className="flex justify-start">
-            <Suspense
-              fallback={
-                <Spinner
-                  className="mt-12"
-                  size="large"
-                  role="status"
-                  aria-live="polite"
-                />
-              }
-            >
-              <ChartDetailsModal />
-            </Suspense>
-          </div>
-        </div>
+        <section>
+          <span className="sr-only">
+            Seção de filtros para consulta de projetos. Mandato selecionado:{' '}
+            {mandato.replace(';', ' a ')}.
+            {onlyApproved
+              ? 'Exibindo apenas projetos aprovados'
+              : 'Exibindo todos os projetos'}
+            .
+          </span>
 
-        {isLoading ? (
-          <Spinner
-            className="mt-12"
-            size="large"
-            role="status"
-            aria-live="polite"
-          />
-        ) : data?.length > 0 ? (
-          <Suspense
-            fallback={
+          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-1 md:gap-6">
+            <div className="flex items-center">
+              <Filter size="20px" className="no-tts" aria-hidden="true" />
+              <Label className="text-md px-3" htmlFor="mandato-select">
+                Selecione o mandato
+              </Label>
+              <Select
+                value={mandato}
+                onValueChange={handleChangeMandato}
+                id="mandato-select"
+              >
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Selecione o mandato desejado" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Mandatos</SelectLabel>
+                    {filterOptions.map((year) => (
+                      <SelectItem key={year} value={year}>
+                        {year.replace(';', ' - ')}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Filtro de apenas aprovados */}
+            <div className="flex items-center">
+              <FileCheck size="20px" className="no-tts" aria-hidden="true" />
+              <Label htmlFor="onlyApprovedSwitch" className="text-md px-3">
+                Apenas <span className="font-semibold">Aprovados</span>
+              </Label>
+              <Switch
+                id="onlyApprovedSwitch"
+                checked={onlyApproved}
+                onCheckedChange={() => setOnlyApproved((v) => !v)}
+                aria-checked={onlyApproved}
+                aria-label="Mostrar apenas projetos aprovados"
+              />
+            </div>
+
+            <div className="flex justify-start">
+              <Suspense
+                fallback={
+                  <Spinner
+                    className="mt-12"
+                    size="large"
+                    role="status"
+                    aria-live="polite"
+                  />
+                }
+              >
+                <ChartDetailsModal />
+              </Suspense>
+            </div>
+          </div>
+        </section>
+
+        {/* Área de resultados */}
+        <section aria-label="Resultados da consulta">
+          {isLoading ? (
+            <div aria-live="polite">
               <Spinner
                 className="mt-12"
                 size="large"
                 role="status"
-                aria-live="polite"
+                aria-label="Carregando resultados"
               />
-            }
-          >
-            <ProjetosDeLeiList
-              data={data}
-              mandato={mandato}
-              onlyApproved={onlyApproved}
-              onClickVereador={handleClickVereador}
-            />
-          </Suspense>
-        ) : (
-          <div className="mt-12 text-center">
-            <h3 className="text-lg">
-              Nenhum projeto foi aprovado até o momento!
-            </h3>
-          </div>
-        )}
+              <span className="sr-only">
+                Carregando lista de projetos de lei
+              </span>
+            </div>
+          ) : data?.length > 0 ? (
+            <div aria-live="polite">
+              <span className="sr-only">
+                {data.length} vereadores encontrados com projetos de lei para o
+                mandato de selecionado.
+                {onlyApproved ? ', Mostrando apenas aprovados' : ''}.
+              </span>
+              <Suspense
+                fallback={
+                  <Spinner
+                    className="mt-12"
+                    size="large"
+                    role="status"
+                    aria-label="Carregando resultados"
+                  />
+                }
+              >
+                <ProjetosDeLeiList
+                  data={data}
+                  mandato={mandato}
+                  onlyApproved={onlyApproved}
+                  onClickVereador={handleClickVereador}
+                />
+              </Suspense>
+            </div>
+          ) : (
+            <div className="mt-12 text-center" aria-live="polite">
+              <h3 className="text-lg">
+                Nenhum projeto foi aprovado até o momento!
+              </h3>
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );

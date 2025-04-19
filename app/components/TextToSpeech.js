@@ -1,9 +1,10 @@
-import { Pause, Play, VolumeX } from 'lucide-react';
+import { Loader2, Pause, Play, VolumeX } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
 export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [rate, setRate] = useState(1);
@@ -82,6 +83,7 @@ export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
       isPlayingRef.current = false;
       setIsSpeaking(false);
       setIsPaused(false);
+      setIsLoading(false);
     } catch (error) {
       console.error('Erro ao parar narração:', error);
     }
@@ -94,6 +96,9 @@ export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
 
       // Cancelar qualquer narração anterior
       stopSpeaking();
+
+      // Mostrar o estado de loading
+      setIsLoading(true);
 
       // Criar nova utterance
       const utterance = new SpeechSynthesisUtterance(contentRef.current);
@@ -111,12 +116,14 @@ export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
         isPlayingRef.current = true;
         setIsSpeaking(true);
         setIsPaused(false);
+        setIsLoading(false); // Desativar loading quando a narração começa
       };
 
       utterance.onend = () => {
         isPlayingRef.current = false;
         setIsSpeaking(false);
         setIsPaused(false);
+        setIsLoading(false);
         utteranceRef.current = null;
       };
 
@@ -131,6 +138,7 @@ export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
           isPlayingRef.current = false;
           setIsSpeaking(false);
           setIsPaused(false);
+          setIsLoading(false);
           utteranceRef.current = null;
         }
       };
@@ -138,10 +146,18 @@ export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
       // Armazenar a referência e iniciar a narração
       utteranceRef.current = utterance;
       synthRef.current.speak(utterance);
+
+      // Adicionar um timeout de segurança para desativar o loading caso a narração não comece
+      setTimeout(() => {
+        if (isLoading) {
+          setIsLoading(false);
+        }
+      }, 3000);
     } catch (error) {
       console.error('Erro ao iniciar narração:', error);
       setIsSpeaking(false);
       setIsPaused(false);
+      setIsLoading(false);
     }
   };
 
@@ -167,8 +183,14 @@ export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
         }
         // Se está pausado, tente retomar
         else if (typeof synthRef.current.resume === 'function') {
+          setIsLoading(true); // Ativar loading ao resumir
           synthRef.current.resume();
           setIsPaused(false);
+
+          // Desativar loading após um curto período
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 500);
         } else {
           // Fallback: reinicie a narração
           startSpeaking();
@@ -182,6 +204,7 @@ export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
       console.error('Erro ao alternar reprodução:', error);
       // Resetar para um estado consistente em caso de erro
       stopSpeaking();
+      setIsLoading(false);
     }
   };
 
@@ -203,11 +226,18 @@ export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
           title={
             isSpeaking && !isPaused ? 'Pausar narração' : 'Iniciar narração'
           }
+          disabled={isLoading}
         >
-          {isSpeaking && !isPaused ? <Pause size={20} /> : <Play size={20} />}
+          {isLoading ? (
+            <Loader2 size={20} className="animate-spin" />
+          ) : isSpeaking && !isPaused ? (
+            <Pause size={20} />
+          ) : (
+            <Play size={20} />
+          )}
         </button>
 
-        {isSpeaking && (
+        {isSpeaking && !isLoading && (
           <button
             onClick={stopSpeaking}
             className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-green-500 transition-colors hover:bg-gray-100"
@@ -219,11 +249,13 @@ export const TextToSpeech = ({ text, language = 'pt-BR' }) => {
         )}
 
         <span className="ml-1 mr-2 text-sm font-medium">
-          {isSpeaking
-            ? isPaused
-              ? 'Narração pausada'
-              : 'Narrando...'
-            : 'Ler conteúdo'}
+          {isLoading
+            ? 'Preparando...'
+            : isSpeaking
+              ? isPaused
+                ? 'Narração pausada'
+                : 'Narrando...'
+              : 'Ler conteúdo'}
         </span>
       </div>
     </div>
@@ -241,18 +273,15 @@ export const withTextToSpeech = (Component) => (props) => {
       if (containerRef.current) {
         try {
           // Extrair texto de todos os elementos visíveis, excluindo elementos que devem ser ignorados
-          const text = Array.from(
-            containerRef.current.querySelectorAll(
-              'p, h1, h2, h3, h4, h5, h6, span, li'
-            )
-          )
+          const text = Array.from(containerRef.current.querySelectorAll('span'))
             .filter((el) => {
               // Verificar se o elemento é visível e não tem a classe 'no-tts'
               const style = window.getComputedStyle(el);
               return (
                 style.display !== 'none' &&
                 style.visibility !== 'hidden' &&
-                !el.classList.contains('no-tts')
+                !el.classList.contains('no-tts') &&
+                el.classList.contains('sr-only')
               );
             })
             .map((el) => el.textContent)
