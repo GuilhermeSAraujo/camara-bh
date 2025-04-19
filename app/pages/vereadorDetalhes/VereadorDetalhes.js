@@ -17,6 +17,13 @@ import { getStatusColor, getStatusColorHex } from '../../lib/utils';
 const DEFAULT_AVATAR =
   'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
 
+function capitalizeName(name) {
+  return name
+    .split(' ')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+}
+
 function VereadorDetalhes() {
   const { idVereador } = useParams();
   const [onlyApproved, setOnlyApproved] = useState(false);
@@ -149,12 +156,16 @@ function VereadorDetalhes() {
                 }}
               />
               <div className="grid gap-2">
-                <h1 className="text-3xl font-bold">{vereador.name}</h1>
+                <h1 className="text-xl font-bold md:text-3xl">
+                  {vereador.name}
+                </h1>
                 {vereador.name !== vereador.fullName && (
                   <>
                     <p className="text-gray-600">
                       Nome civil:{' '}
-                      <span className="font-medium">{vereador.fullName}</span>
+                      <span className="font-medium">
+                        {capitalizeName(vereador?.fullName)}
+                      </span>
                     </p>
                     <span className="sr-only">
                       Nome civil: {vereador.fullName}.
