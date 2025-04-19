@@ -137,7 +137,7 @@ function ProjetosDeLeiPartidos() {
                 {data?.length} partidos.
               </div>
               <div className="mt-10 gap-4 overflow-x-auto">
-                <div className="min-w-[800px]">
+                <div className="min-w-[300px]">
                   <ChartContainer config={chartConfig} className="w-full">
                     <BarChart
                       accessibilityLayer
