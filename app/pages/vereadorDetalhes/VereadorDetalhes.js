@@ -215,7 +215,7 @@ function VereadorDetalhes() {
                     </h2>
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       <div
-                        className="h-[300px] focus:outline-none"
+                        className="mt-4 h-[315px] focus:outline-none"
                         tabIndex={-1}
                       >
                         <ResponsiveContainer width="100%" height="100%">
