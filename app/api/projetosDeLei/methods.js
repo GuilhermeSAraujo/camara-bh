@@ -2,10 +2,11 @@ import { check, Match } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { VereadoresCollection } from '../vereadores';
 import { ProjetosDeLeiCollection, ProjetosDeLeiStatus } from './collection';
-import { Mongo } from 'meteor/mongo';
 
 const VEREADORES_CACHE = new Map();
 const PARTIES_CACHE = new Map();
+const DEFAULT_AVATAR =
+  'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
 
 async function aprovados({ mandato, onlyApproved }) {
   check(mandato, String);
@@ -71,6 +72,20 @@ async function aprovados({ mandato, onlyApproved }) {
         (m) => m.startYear >= startYear && m.endYear <= endYear
       )?.party || 'Desconhecido';
 
+    const findFirstAvailableImage = (mandates) => {
+      if (!mandates || !Array.isArray(mandates)) return DEFAULT_AVATAR;
+
+      for (let i = mandates.length - 1; i >= 0; i--) {
+        if (mandates[i]?.imgUrl) {
+          return mandates[i].imgUrl;
+        }
+      }
+
+      return DEFAULT_AVATAR;
+    };
+
+    const vereadorImgUrl = findFirstAvailableImage(vereador?.mandates);
+
     if (vereadorParty === 'Desconhecido') {
       console.warn(
         new Date().toLocaleString('pt-BR'),
@@ -80,7 +95,11 @@ async function aprovados({ mandato, onlyApproved }) {
       );
     }
 
-    returnObject.push({ ...author, party: vereadorParty });
+    returnObject.push({
+      ...author,
+      party: vereadorParty,
+      imageUrl: vereadorImgUrl,
+    });
   }
 
   console.info(

@@ -104,11 +104,10 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
     // FECHA A SIDEBAR DEPENDENDO DO DISPOSITIVO
     if (isMobile) {
       setOpenMobile(false);
-    } else {
-      setOpen(false);
     }
 
     navigate(url);
+    window.scrollTo(0, 0);
   };
 
   const handleKeyDown = (event, action) => {

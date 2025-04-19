@@ -1,13 +1,12 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable react-compiler/react-compiler */
-import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
-import { PanelLeft } from 'lucide-react';
+import { Menu } from 'lucide-react';
+import * as React from 'react';
 
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { cn } from '../../lib/utils';
-import { Button } from './Button';
 import { Input } from './Input';
 import { Separator } from './Separator';
 import { Sheet, SheetContent } from './Sheet';
@@ -21,9 +20,9 @@ import {
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = '16rem';
+const SIDEBAR_WIDTH = '14rem';
 const SIDEBAR_WIDTH_MOBILE = '18rem';
-const SIDEBAR_WIDTH_ICON = '3rem';
+const SIDEBAR_WIDTH_ICON = '8rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
 const SidebarContext = React.createContext(null);
@@ -115,7 +114,7 @@ const SidebarProvider = React.forwardRef(
           <div
             style={{
               '--sidebar-width': SIDEBAR_WIDTH,
-              '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
+              // '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
               ...style,
             }}
             className={cn(
@@ -231,21 +230,14 @@ const SidebarTrigger = React.forwardRef(
     const { toggleSidebar } = useSidebar();
 
     return (
-      <Button
+      <Menu
+        size={30}
         ref={ref}
-        data-sidebar="trigger"
-        variant="ghost"
-        size="icon"
-        className={cn('h-7 w-7', className)}
         onClick={(event) => {
           onClick?.(event);
           toggleSidebar();
         }}
-        {...props}
-      >
-        <PanelLeft />
-        <span className="sr-only">Toggle Sidebar</span>
-      </Button>
+      />
     );
   }
 );
@@ -303,7 +295,7 @@ const SidebarHeader = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
     data-sidebar="header"
-    className={cn('flex flex-col gap-2 p-2', className)}
+    className={cn('mt-2 flex flex-col gap-2', className)}
     {...props}
   />
 ));
