@@ -1,8 +1,9 @@
+import { MessageSquarePlus } from 'lucide-react';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RoutePaths } from '../../general/RoutePaths';
-import { Separator } from './Separator';
 import { NavBarCaption } from './NavBarCaption';
+import { Separator } from './Separator';
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +17,10 @@ import {
   SidebarRail,
   useSidebar,
 } from './Sidebar';
+
+// Import shadcn/ui components
+import { FeedbackDialog } from '../FeedbackDialog';
+import { Button } from './Button';
 
 // Dados de exemplo
 const data = {
@@ -61,7 +66,10 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
   const location = useLocation();
   const navigate = useNavigate();
   // Pegamos também setOpenMobile e isMobile do contexto
-  const { setOpen, isMobile, setOpenMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  // Estado para controlar o dialog de feedback
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Init navItems marcando o ativo pela rota
   const initializeNavItems = () =>
@@ -188,8 +196,23 @@ export function AppSidebar({ setBreadcrumb, ...props }) {
             );
           })}
         </nav>
+
+        <Separator className="my-6" />
+
+        <div className="mt-auto px-3 pb-2">
+          <Button
+            variant="outline"
+            className="flex w-full items-center justify-start gap-2 py-5"
+            aria-label="Enviar sugestões ou feedback"
+            onClick={() => setDialogOpen(true)}
+          >
+            <MessageSquarePlus size={18} className="text-blue-600" />
+            <span className="font-medium">Sugestões</span>
+          </Button>
+          <FeedbackDialog open={dialogOpen} onClose={setDialogOpen} />
+        </div>
       </SidebarContent>
-      <SidebarRail aria-hidden="true" />
+      <SidebarRail />
     </Sidebar>
   );
 }
