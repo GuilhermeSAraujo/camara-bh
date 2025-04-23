@@ -197,23 +197,25 @@ function VereadorDetalhes() {
               <h2 className="mb-4 text-xl font-bold">Histórico de Mandatos</h2>
               <span className="sr-only">Histórico de mandatos:</span>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                {vereador.mandates?.map((mandato) => (
-                  <div
-                    key={mandato.startYear}
-                    className="rounded-lg border p-4 text-center"
-                  >
-                    <p className="font-semibold">
-                      {mandato.startYear} - {mandato.endYear}
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {mandato.party}
-                    </p>
-                    <span className="sr-only">
-                      De {mandato.startYear} a {mandato.endYear} partido:
-                      {mandato.party}.
-                    </span>
-                  </div>
-                ))}
+                {vereador.mandates
+                  ?.sort((a, b) => a.startYear - b.startYear)
+                  .map((mandato) => (
+                    <div
+                      key={mandato.startYear}
+                      className="rounded-lg border p-4 text-center"
+                    >
+                      <p className="font-semibold">
+                        {mandato.startYear} - {mandato.endYear}
+                      </p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {mandato.party}
+                      </p>
+                      <span className="sr-only">
+                        De {mandato.startYear} a {mandato.endYear} partido:
+                        {mandato.party}.
+                      </span>
+                    </div>
+                  ))}
               </div>
             </div>
 
