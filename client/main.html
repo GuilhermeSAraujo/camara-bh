@@ -9,8 +9,60 @@
   <link rel="icon" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/fonts/your-main-font.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/images/critical-image.png" as="image" />
+  
+  <!-- Preconnect to important domains -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <!-- Add dns-prefetch for external domains -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  
+  <!-- Add async loading for non-critical CSS -->
+  <link rel="stylesheet" href="/styles/non-critical.css" media="print" onload="this.media='all'" />
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful');
+          })
+          .catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
+  </script>
 </head>
 
 <body>
   <div id="app" class="h-screen"></div>
+  
+  <!-- Add loading indicator -->
+  <div id="loading-indicator" class="fixed inset-0 flex items-center justify-center bg-white z-50">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+  </div>
+
+  <!-- Script to remove loading indicator -->
+  <script>
+    window.addEventListener('load', () => {
+      const loadingIndicator = document.getElementById('loading-indicator');
+      if (loadingIndicator) {
+        // Add a small delay to ensure smooth transition
+        setTimeout(() => {
+          loadingIndicator.style.opacity = '0';
+          loadingIndicator.style.transition = 'opacity 0.3s ease-out';
+          setTimeout(() => {
+            loadingIndicator.remove();
+          }, 300);
+        }, 500);
+      }
+    });
+  </script>
 </body>
