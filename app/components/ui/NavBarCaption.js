@@ -19,7 +19,11 @@ export function NavBarCaption({ handleItemClick }) {
             <img
               src="/brasao-bh.png"
               alt="Brasão de Belo Horizonte"
-              loading="lazy"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              width="48"
+              height="48"
             />
           </div>
           <div

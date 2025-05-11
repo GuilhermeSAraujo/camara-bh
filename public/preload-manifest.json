@@ -1,6 +1,12 @@
 {
-    "criticalComponents": [
-      "/app/pages/projetosDeLei/ProjetosDeLeiList.js",
-      "/app/components/ui/ChartDetailsModal.js"
-    ]
-  }
+  "criticalComponents": [
+    "/app/pages/projetosDeLei/ProjetosDeLei.js",
+    "/app/pages/projetosDeLei/ProjetosDeLeiList.js",
+    "/app/components/Layout.js",
+    "/app/components/ui/AppSidebar.js",
+    "/app/components/ui/Breadcrumb.js",
+    "/app/pages/home/Home.js"
+  ],
+  "criticalStyles": ["/styles/main.css"],
+  "criticalImages": ["/brasao-bh.png"]
+}

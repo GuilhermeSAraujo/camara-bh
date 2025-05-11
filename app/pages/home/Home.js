@@ -96,9 +96,11 @@ function Home() {
           <div className="col-span-1 flex w-full items-center justify-center md:col-span-1">
             <img
               src="/brasao-bh.png"
-              loading="lazy"
               alt="Brasão de Belo Horizonte"
               className="h-auto w-full max-w-[230px]"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
             />
           </div>
         </div>

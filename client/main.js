@@ -1,19 +1,21 @@
-import React, { StrictMode } from 'react';
+import React, { StrictMode, Suspense } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createRoot } from 'react-dom/client';
 import { App } from '../app/general/App';
 
-// Função para lidar com preloading
+// Function to handle preloading
 const setupPreloading = async () => {
   try {
-    // Carrega o manifesto de preload
+    // Load the preload manifest
     const response = await fetch('/preload-manifest.json');
     const manifest = await response.json();
 
     if (manifest.criticalComponents && 'requestIdleCallback' in window) {
       requestIdleCallback(() => {
         manifest.criticalComponents.forEach((path) => {
-          import(path).catch((err) => console.warn('Preload error:', err));
+          import(path)
+            .then((v) => console.log('component', path, 'loaded'))
+            .catch((err) => console.warn('Preload error:', err));
         });
       });
     }
@@ -22,14 +24,23 @@ const setupPreloading = async () => {
   }
 };
 
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="flex min-h-screen items-center justify-center">
+    <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-t-2 border-primary" />
+  </div>
+);
+
 Meteor.startup(() => {
-  // Inicia o preload
+  // Start preloading
   setupPreloading();
 
   const root = createRoot(document.getElementById('app'));
   root.render(
     <StrictMode>
-      <App />
+      <Suspense fallback={<LoadingFallback />}>
+        <App />
+      </Suspense>
     </StrictMode>
   );
 });
