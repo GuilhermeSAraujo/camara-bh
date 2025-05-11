@@ -5,7 +5,8 @@
     "/app/components/Layout.js",
     "/app/components/ui/AppSidebar.js",
     "/app/components/ui/Breadcrumb.js",
-    "/app/pages/home/Home.js"
+    "/app/pages/home/Home.js",
+    "/app/components/TextToSpeech.js"
   ],
   "criticalStyles": ["/styles/main.css"],
   "criticalImages": ["/brasao-bh.png"]
