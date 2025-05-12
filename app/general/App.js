@@ -7,7 +7,7 @@ import { Loading } from '../components/Loading';
 export function App() {
   return (
     <>
-      <Suspense fallback={<Loading name="suspense" />}>
+      <Suspense fallback={<Loading />}>
         <RouterProvider router={router} />
       </Suspense>
       <Toaster />
