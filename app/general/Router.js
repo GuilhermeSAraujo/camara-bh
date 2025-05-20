@@ -1,7 +1,7 @@
 // router.js
 import React, { Suspense } from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
-import { RoutePaths } from '/app/general/RoutePaths';
+import { RoutePaths } from './RoutePaths';
 
 const Home = React.lazy(() => import('../pages/home/Home'));
 const Layout = React.lazy(() => import('../components/Layout'));
@@ -30,11 +30,11 @@ export const router = createBrowserRouter([
           { path: RoutePaths.BUSCAR, element: <SearchProjetoDeLei /> },
           { path: RoutePaths.PROJETOS_DE_LEI, element: <ProjetosDeLei /> },
           {
-            path: RoutePaths.PROJETOS_DE_LEI_PARTIDOS,
+            path: RoutePaths.PROJETOS_DE_LEI_POR_PARTIDOS,
             element: <ProjetosDeLeiPartidos />,
           },
           { path: RoutePaths.VEREADORES, element: <Vereadores /> },
-          { path: RoutePaths.VEREADOR_DETALHES, element: <VereadorDetalhes /> },
+          { path: RoutePaths.VEREADOR, element: <VereadorDetalhes /> },
         ],
       },
     ],

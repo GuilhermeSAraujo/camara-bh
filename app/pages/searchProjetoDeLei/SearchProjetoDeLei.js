@@ -398,9 +398,8 @@ function SearchProjetoDeLei() {
             </div>
             <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
               {paginatedData.map((projeto) => (
-                <>
+                <React.Fragment key={projeto.title}>
                   <Card
-                    key={projeto.title}
                     className="flex h-full flex-col hover:cursor-pointer"
                     onClick={() => handleClickProjeto(projeto)}
                   >
@@ -431,7 +430,7 @@ function SearchProjetoDeLei() {
                     {projeto.title}.{projeto.author.replace('Ver.(a)', '')}.{' '}
                     {projeto.summary}. Ano: {projeto.year}. {projeto.status}.
                   </span>
-                </>
+                </React.Fragment>
               ))}
             </div>
 

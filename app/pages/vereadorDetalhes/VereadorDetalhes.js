@@ -406,11 +406,8 @@ function VereadorDetalhes() {
                   {filteredProjetos?.length > 0 ? (
                     <div className="space-y-4">
                       {filteredProjetos.map((projeto) => (
-                        <>
-                          <div
-                            key={projeto._id}
-                            className="rounded-lg border p-4 transition-colors hover:bg-gray-50"
-                          >
+                        <React.Fragment key={projeto._id}>
+                          <div className="rounded-lg border p-4 transition-colors hover:bg-gray-50">
                             <h3 className="text-lg font-semibold">
                               {projeto.title}
                             </h3>
@@ -460,7 +457,7 @@ function VereadorDetalhes() {
                             {projeto.title} com status {projeto.status} de
                             {projeto.year}.{projeto.summary}.
                           </span>
-                        </>
+                        </React.Fragment>
                       ))}
                     </div>
                   ) : (

@@ -1,6 +1,6 @@
 import { FileCheck, Filter } from 'lucide-react';
 import { Meteor } from 'meteor/meteor';
-import React, { Suspense, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { withTextToSpeech } from '../../components/TextToSpeech';
 import { Label } from '../../components/ui/Label';
@@ -17,20 +17,8 @@ import {
 import { Spinner } from '../../components/ui/Spinner';
 import { Switch } from '../../components/ui/Switch';
 import { useMethodWithState } from '../../hooks/useMethodWithState';
-
-const ChartDetailsModal = React.lazy(
-  () => import('../../components/ui/ChartDetailsModal')
-);
-const ProjetosDeLeiList = React.lazy(
-  () =>
-    new Promise((resolve) => {
-      import('./ProjetosDeLeiList').then((module) => {
-        setTimeout(() => {
-          resolve(module);
-        }, 100);
-      });
-    })
-);
+import ChartDetailsModal from '../../components/ui/ChartDetailsModal';
+import ProjetosDeLeiList from './ProjetosDeLeiList';
 
 const filterOptions = ['2013;2016', '2017;2020', '2021;2024'];
 
@@ -133,18 +121,7 @@ function ProjetosDeLei() {
             </div>
 
             <div className="flex justify-start">
-              <Suspense
-                fallback={
-                  <Spinner
-                    className="mt-12"
-                    size="large"
-                    role="status"
-                    aria-live="polite"
-                  />
-                }
-              >
-                <ChartDetailsModal />
-              </Suspense>
+              <ChartDetailsModal />
             </div>
           </div>
         </section>
@@ -170,23 +147,12 @@ function ProjetosDeLei() {
                 mandato de selecionado.
                 {onlyApproved ? ', Mostrando apenas aprovados' : ''}.
               </span>
-              <Suspense
-                fallback={
-                  <Spinner
-                    className="mt-12"
-                    size="large"
-                    role="status"
-                    aria-label="Carregando resultados"
-                  />
-                }
-              >
-                <ProjetosDeLeiList
-                  data={data}
-                  mandato={mandato}
-                  onlyApproved={onlyApproved}
-                  onClickVereador={handleClickVereador}
-                />
-              </Suspense>
+              <ProjetosDeLeiList
+                data={data}
+                mandato={mandato}
+                onlyApproved={onlyApproved}
+                onClickVereador={handleClickVereador}
+              />
             </div>
           ) : (
             <div className="mt-12 text-center" aria-live="polite">
