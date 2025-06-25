@@ -120,8 +120,8 @@ function Home() {
       <span className="sr-only">
         Transparência na Câmara Municipal. Belo Horizonte, Minas Gerais.
         Acompanhe de forma clara e intuitiva o trabalho dos vereadores de Belo
-        Horizonte. Explore cada etapa dos projetos de lei — das propostas às
-        aprovações —, conheça os perfis dos parlamentares e fique por dentro das
+        Horizonte. Explore cada etapa dos projetos de lei, das propostas às
+        aprovações, conheça os perfis dos parlamentares e fique por dentro das
         DECISÕES essenciais que impactam nossa cidade. Informações oficiais
         extraídas diretamente da Câmara Municipal de Belo Horizonte . Navegue
         entre 108 vereadores cadastrados e descubra 3340 projetos de lei
