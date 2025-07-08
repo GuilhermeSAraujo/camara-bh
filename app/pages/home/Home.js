@@ -75,8 +75,8 @@ function Home() {
             </h2>
             <p className="leading-7">
               Acompanhe de forma clara e intuitiva o trabalho dos vereadores de
-              Belo Horizonte. Explore cada etapa dos projetos de lei — das
-              propostas às aprovações —, conheça os perfis dos parlamentares e
+              Belo Horizonte. Explore cada etapa dos projetos de lei, das
+              propostas às aprovações, conheça os perfis dos parlamentares e
               fique por dentro das <strong>DECISÕES</strong> essenciais que
               impactam nossa cidade.
             </p>
